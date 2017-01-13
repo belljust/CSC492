@@ -10,7 +10,7 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="Test.css">
     <script JQUERY src="jquery-2.1.0.js"></script>
-    <script Contoller src="Controller.js"></script>
+    <script Controller src="Controller.js"></script>
   </head>
 
   <body>
@@ -34,11 +34,12 @@
         </tr>
       </table>
     </form>
-    <!--
-  	<button type="button" name="MainButton" onclick="makeMessage('Main');">Main Page</button>
-    <button type="button" name="ApplicationButton" onclick="makeMessage('Application');">Application</button>
-    <button type="button" name="ProfileButton" onclick="makeMessage('Profile');">My Profile</button>
-    -->
+    <button type="button" id="logout">
+      Logout
+    </button>
+    <button type="button" id="getInfo">
+      Get Info
+    </button>
     <div id="content">
       <!--Default-->
     </div>
