@@ -32,7 +32,10 @@
 			$returnString .= 'loggedIn='.$_SESSION['loggedIn'].'&';
 		}
 		if (isset($_POST['User'])){
-			$returnString .= 'User='.$_SESSION['user'];
+			$returnString .= 'User='.$_SESSION['user'].'&';
+		}
+		if (isset($_POST['Role'])){
+			$returnString .= 'Role='.$_SESSION['role'];
 		}
 		echo $returnString;
 	}
@@ -52,6 +55,7 @@
 			if(md5($_POST['password']) == $row['Password']){
 				$_SESSION['loggedIn'] = "true";
 				$_SESSION['user'] = $_POST['UTORID'];
+				$_SESSION['role'] = $row['ROLE'];
 			}
 			else{
 				echo "Incorrect Password";
@@ -80,5 +84,6 @@
 	if(!isset($_SESSION['loggedIn'])){
 		$_SESSION["loggedIn"] = "false";
 		$_SESSION['user'] = "";
+		$_SESSION['role'] = "";
 	}
 ?>

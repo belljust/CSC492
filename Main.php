@@ -14,34 +14,23 @@
   </head>
 
   <body>
-    <form method="post" action="connect2db.php" id="login_form">
-      <table id="login_table" style="border:2px solid black;">
+    <div id="banner">
+      <table id="bannerTable">
         <tr>
-          <th align="center" colspan="2">Login using a valid UTORID</th>
-        </tr>
-        <tr>
-          <td allign="right"> UTORID:</td>
-          <td> <input type="text" name="utorid" id="utorid" size="8"> </td>
-        </tr>
-        <tr>
-          <td allign="right"> Password:</td>
-          <td> <input type="password" name="password" id="password" size="15"> </td>
-        </tr>
-        <tr>
-          <td align="right" colspan="2"> 
-            <input type="submit" value="login">
+          <td><img src="Pictures/UofTLogo.png" id="UofTLogo"></td>
+          <td><h1> TA Application System </h1></td>
+          <td>
+            <button type="button" id="logout"> Logout </button>
+            <button type="button" id="getInfo"> Get Info </button>
           </td>
         </tr>
       </table>
-    </form>
-    <button type="button" id="logout">
-      Logout
-    </button>
-    <button type="button" id="getInfo">
-      Get Info
-    </button>
-    <div id="content">
-      <!--Default-->
     </div>
+    <br>
+    <center>
+      <div id="content">
+      <!--Default-->
+      </div>
+    </center>
   </body>
 </html>
