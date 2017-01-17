@@ -93,9 +93,9 @@ function displayInfo(role){
 		case "ADMIN":
 			$("#content").replaceWith("ADMIN PAGE");
 		case "INSTRUCTOR":
-			$("#content").replaceWith("INSTRUCTOR PAGE");
+			$("#content").replaceWith(instructorPages);
 		case "APPLICANT":
-			$("#content").replaceWith("APPLICANT PAGE");
+			$("#content").replaceWith(applicantPages);
 		case "NOTLOGGEDIN":
 			$("#content").html(loginTable);
 		case "":
@@ -105,16 +105,22 @@ function displayInfo(role){
 
 /* ==================== Page Content Global Variables ======================== */
 
-/* HTML for login table. Displayed when $_SESSION[loggedIn] == False */
-var loginTable = 
-				'<table id="login_table" style="border:2px solid black;">' +
+/* HTML for login table. Displayed when $_SESSION['loggedIn'] == False */
+var loginTable ='<table id="login_table" style="border:2px solid black;">' +
 				'<tr><th align="center" colspan="2">Login using a valid UTORID</th></tr>' +
 				'<tr><td allign="right"> UTORID:</td> <td>' +
 				'<input type="text" name="utorid" id="utorid" size="8"> </td></tr>' +
 				'<tr><td allign="right"> Password:</td><td>' +
 				'<input type="password" name="password" id="password" size="15"> </td></tr>' +
 				'<tr><td align="right" colspan="2"> <button type="button" id="login"> Login'  +
-				'</button></td></tr></table>'
+				'</button></td></tr></table>';
 
+/* HTML for page buttons for instructors. Displayed when $_SESSION['User'] == 'INSTRUCTOR' */
+var instructorPages = '<center><table id="instButtons"><tr><td><button id="coursePage">Courses</botton>' +
+					  '</td><td></td><td><button id="appPage">Applicants</botton></td><td></td>' +
+					  '<td><button id="userPage">Add User</botton></td></tr></table></center>';
 
-
+/* HTML for page buttons for applicants. Displayed when $_SESSION['User'] == 'APPLICANT' */
+var applicantPages = '<center><table id="appButtons"><tr><td><button id="coursePage">Courses</botton>' +
+					  '</td><td></td><td><button id="profile">Profile</botton></td><td></td>' +
+					  '<td><button id="contact">Contact</botton></td></tr></table></center>';
