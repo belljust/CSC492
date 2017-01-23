@@ -11,3 +11,17 @@ body{
 	color: blue;
 }
 
+#courseTable{
+	border: 2px solid black;
+	height: 60%;
+	max-width: 75%;
+	text-align: left;
+	border-spacing: 10px;
+}
+
+#courseTable tr:hover{
+	background-color: #ffff80; 
+}
+#selected{
+	background-color: #ff8533;
+}

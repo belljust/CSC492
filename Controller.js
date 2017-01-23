@@ -4,31 +4,31 @@
 /* Event listener that look for actions on page */
 $(document).ready(function(){
 	console.log("document.ready");
-
 	getInfo();
 
 	/* When login form is submitted*/
-	setInterval(function(){
-		$("#login").click(function(page){
-			console.log("login button clicked");
-			login();
-		});
-	}, 1000);
-
+	$("#contentForm").submit(function(page){
+		page.preventDefault();
+		login();
+	});
 
 	/* When Logout button is pressed*/
-	$("#logout").click(function(page){
+	$("#logout").click(function(){
 		logout();
 		console.log('logout button just pressed');
 	});
-
-	/* For testing purposes displayed Session info */
-	$("#getInfo").click(function(page){
-		page.preventDefault();
-		console.log("getInfo button just pressed");
-		getInfo();
-	});
 });
+
+selectedRow = null;
+$(document).on("click", "tr",function() {
+	if (selectedRow == null){} 
+	else{
+		selectedRow.css("background-color", "white");
+	}
+	$(this).css("background-color", "#ff8533");
+	selectedRow = $(this);
+});
+
 
 /* Add event listeners here for different page buttons
 	- call display info with each button press */
@@ -67,11 +67,10 @@ function logout(){
 }
 
 /* function called to retrieve session variables
-	then calls displayInfo() with appropraite 
+	then calls displayButtons() with appropraite 
 	page data based on role assigned */
 function getInfo(){
 	var loginString = "LoggedIn=True&User=True&GetInfo=True&Role=True";
-	//console.log(loginString);
 
 	$.ajax({
 		type: "POST",
@@ -81,26 +80,74 @@ function getInfo(){
 			console.log("response: ",response);
 			Role = response.split('&')[2].substr(5,20);
 			console.log("role: ", Role);
-			displayInfo(Role);
+			if (response.split('&')[0].substr(9,15) == 'false'){
+				displayButtons("NOTLOGGEDIN");
+			}else{
+				displayButtons(Role);
+			}
 		}
 	})
 }
 
+
+/* ==================== Page Display Functions ======================== */
+
 /* Switches content of the page, based on role of the user; uses a 
 	global variable from below to populate the 'content' div */
-function displayInfo(role){
+function displayButtons(role){
+	console.log('displayInfo role:' + role);
 	switch(role){
 		case "ADMIN":
-			$("#content").replaceWith("ADMIN PAGE");
+			$("#pageButtons").html(adminPages);
+			$("#contentForm").hide();
+			displayPageInfo("Courses");
+			break;
 		case "INSTRUCTOR":
-			$("#content").replaceWith(instructorPages);
+			$("#pageButtons").html(instructorPages);
+			$("#contentForm").hide();
+			displayPageInfo("Courses");
+			break;
 		case "APPLICANT":
-			$("#content").replaceWith(applicantPages);
+			$("#pageButtons").html(applicantPages);
+			$("#contentForm").hide();
+			displayPageInfo("Courses");
+			break;
 		case "NOTLOGGEDIN":
-			$("#content").html(loginTable);
-		case "":
-			$("#content").html(loginTable);
+			$("#contentForm").html(loginTable);
+			break;
 	}
+}
+
+function displayPageInfo(page){
+	console.log("displayCourses() called.");
+	var postString = page+"=True";
+
+	$.ajax({
+		type: "POST",
+		url: "Controller.php",
+		data: postString,
+		success: function(response){
+			console.log("about to print: " + response);
+			$("#pageInfo").html(response);
+		},
+		error: function(){
+			$("#pageInfo").html('<p>Error connecting to database</p>');
+		}
+	})
+}
+
+function deleteCourse(){
+	var deleteString = "ID=";
+	var i = 0;
+	selectedRow.find('td').each(function(){
+		if (i==0){
+			deleteString += $(this).text();
+			i ++;
+		}
+	});
+	deleteString += '&Delete=True&Courses'
+	console.log(deleteString);
+	displayPageInfo(deleteString);
 }
 
 /* ==================== Page Content Global Variables ======================== */
@@ -112,11 +159,12 @@ var loginTable ='<table id="login_table" style="border:2px solid black;">' +
 				'<input type="text" name="utorid" id="utorid" size="8"> </td></tr>' +
 				'<tr><td allign="right"> Password:</td><td>' +
 				'<input type="password" name="password" id="password" size="15"> </td></tr>' +
-				'<tr><td align="right" colspan="2"> <button type="button" id="login"> Login'  +
+				'<tr><td align="right" colspan="2"> <input type="submit" id="login" value="Login"> '  +
 				'</button></td></tr></table>';
 
 /* HTML for page buttons for instructors. Displayed when $_SESSION['User'] == 'INSTRUCTOR' */
-var instructorPages = '<center><table id="instButtons"><tr><td><button id="coursePage">Courses</botton>' +
+var instructorPages = '<center><table id="instButtons"><tr><td>' +
+					  '<button id="coursePage" onclick="displayPageInfo(' + "'Courses'" +')">Courses</botton>' +
 					  '</td><td></td><td><button id="appPage">Applicants</botton></td><td></td>' +
 					  '<td><button id="userPage">Add User</botton></td></tr></table></center>';
 
@@ -124,3 +172,8 @@ var instructorPages = '<center><table id="instButtons"><tr><td><button id="cours
 var applicantPages = '<center><table id="appButtons"><tr><td><button id="coursePage">Courses</botton>' +
 					  '</td><td></td><td><button id="profile">Profile</botton></td><td></td>' +
 					  '<td><button id="contact">Contact</botton></td></tr></table></center>';
+
+var adminPages = '<center><table id="admButtons"><tr><td>' +
+				 '<button type="button" id="coursePage" onclick="displayPageInfo(' + "'Courses'" +')">Courses</botton>' +
+				 '</td><td></td><td><button id="usersPage" onclick="displayPageInfo(' + "'Users'" +')">Users</botton></td><td></td>' +
+				 '<td><button id="statsPage" onclick="displayStats()">Stats</botton></td></tr></table></center>';

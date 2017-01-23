@@ -12,25 +12,26 @@
     <script JQUERY src="jquery-2.1.0.js"></script>
     <script Controller src="Controller.js"></script>
   </head>
-
+  
   <body>
     <div id="banner">
       <table id="bannerTable">
         <tr>
           <td><img src="Pictures/UofTLogo.png" id="UofTLogo"></td>
           <td><h1> TA Application System </h1></td>
-          <td>
-            <button type="button" id="logout"> Logout </button>
-            <button type="button" id="getInfo"> Get Info </button>
-          </td>
+          <td><button type="button" id="logout"> Logout </button></td>
         </tr>
       </table>
     </div>
     <br>
     <center>
-      <div id="content">
-      <!--Default-->
+      <form id ="contentForm" method="post" action="">
+      </form>
+      <div id="pageButtons">
+        <!-- Display the page buttons here -->
       </div>
+      <div id="pageInfo">
+      <!-- Display the page content here -->
     </center>
   </body>
 </html>
