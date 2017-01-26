@@ -19,7 +19,7 @@ body{
 	border-spacing: 10px;
 }
 
-#courseTable tr:hover{
+#courseTable tbody tr:hover{
 	background-color: #ffff80; 
 }
 #selected{

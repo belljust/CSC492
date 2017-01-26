@@ -13,14 +13,18 @@ $(document).ready(function(){
 	});
 
 	/* When Logout button is pressed*/
-	$("#logout").click(function(){
-		logout();
-		console.log('logout button just pressed');
-	});
 });
 
+$(document).on("hover", "#pageInfo tbody tr",function() {
+	if ($(this) == null){} 
+	else{
+		$(this).css("background-color", "#ffff80");
+	}
+});
+
+/* As of right now can't reset on hover value after a row is selected*/
 selectedRow = null;
-$(document).on("click", "tr",function() {
+$(document).on("click", "#pageInfo tbody tr",function() {
 	if (selectedRow == null){} 
 	else{
 		selectedRow.css("background-color", "white");
@@ -29,9 +33,17 @@ $(document).on("click", "tr",function() {
 	selectedRow = $(this);
 });
 
+$(document).on("click","#logout",function(){
+		logout();
+		console.log('logout button just pressed');
+	});
 
-/* Add event listeners here for different page buttons
-	- call display info with each button press */
+$(document).on("submit", "#addCourseForm",function(page) {
+	page.preventDefault();
+	addCourse();
+});
+
+
 
 /* ==================== User Functions ======================== */
 
@@ -118,6 +130,9 @@ function displayButtons(role){
 	}
 }
 
+/* The function that actually does the sending of the variables through 
+	an Ajax call to Controller.php based on collected information stored
+	in the 'page' paramter sent from other functions in Controller.js.*/
 function displayPageInfo(page){
 	console.log("displayCourses() called.");
 	var postString = page+"=True";
@@ -127,7 +142,7 @@ function displayPageInfo(page){
 		url: "Controller.php",
 		data: postString,
 		success: function(response){
-			console.log("about to print: " + response);
+			//console.log("about to print: " + response);
 			$("#pageInfo").html(response);
 		},
 		error: function(){
@@ -136,6 +151,8 @@ function displayPageInfo(page){
 	})
 }
 
+/* Function called to send values of the selected Course from the course
+table to Controller.php to which is deleted from the database.*/
 function deleteCourse(){
 	var deleteString = "ID=";
 	var i = 0;
@@ -148,6 +165,20 @@ function deleteCourse(){
 	deleteString += '&Delete=True&Courses'
 	console.log(deleteString);
 	displayPageInfo(deleteString);
+}
+
+/* Function called to send values of the add Course form to Controller.php
+	to which is added to the database.*/
+function addCourse(){
+	var addString = 'CourseCode=' + $('#courseCode').val()
+					+ '&CourseTitle=' + $('#courseTitle').val()
+					+ '&CourseTerm=' + $('#courseTerm').val()
+					+ '&CourseInstructor=' + $('#courseInstructor').val()
+					+ '&CourseCampus=' + $('#courseCampus').val()
+					+ '&Add=True&Courses';
+
+	console.log(addString);
+	displayPageInfo(addString);
 }
 
 /* ==================== Page Content Global Variables ======================== */

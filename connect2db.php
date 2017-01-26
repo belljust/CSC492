@@ -72,7 +72,6 @@
 	if(isset($_POST['Logout'])){
 		$_SESSION["loggedIn"] = "false";
 		session_destroy();
-		echo 'You are now logged out';
 		mysqli_close($dbconnect);
 	}
 
