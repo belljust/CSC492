@@ -25,8 +25,6 @@
     </div>
     <br>
     <center>
-      <form id ="contentForm" method="post" action="">
-      </form>
       <div id="pageButtons">
         <!-- Display the page buttons here -->
       </div>

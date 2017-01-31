@@ -43,6 +43,13 @@
 			mysqli_query($dbconnect, $query);
 		}
 
+		/* Changing Instructor of a course */
+		if(isset($_POST['ChangeInstructor'])){
+			$query = 'UPDATE COURSE SET INSTRUCTOR="'.$_POST['Instructor'].'" WHERE CID='.$_POST['RowId'];
+			$result = mysqli_query($dbconnect, $query);
+		}
+		
+
 		$query = 'SELECT * FROM Course;';
 		/* could add sort feature */
 
@@ -56,33 +63,70 @@
 			}
 			$returnString .= '</tr>';
 		}
+			/* ========= Constructing selection options for available teachers and campuses ============ */
+				mysqli_free_result($result);
+ 				$query = 'SELECT * FROM Users WHERE ROLE="INSTRUCTOR"';
+				$result = mysqli_query($dbconnect, $query);
+
+				/* Generate select options for Instructors to choose from */
+				$instStringHead = '<select id="courseInstructor">';
+				$instStringBody = '';
+				while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
+					$instStringBody .= '<option value="'.$row[0].'">'.$row[1].' '.$row[2].'</option>';
+				}
+				$instStringBody .= '</select>';
+				$instStringHead .= $instStringBody;
+
+				/* Campus Select box */
+				$Campuses = '<select id="courseCampus"><option value="UTSTG"> UTSTG</option>'.
+							'<option value="UTM"> UTM </option></select>';
+			/* ===================================================================================== */
+
+
 		/* Creates the html code for the Course Table and the form for adding a course underneath */
-		$returnString .= '<tr><button id="deleteCourse" onclick="deleteCourse()">Delete Course</botton></tr>'.
-						 '</tbody></table>'.
+		$returnString .= '</tbody></table>'.'<p>Remove a course: </p>'.
+						 '<button id="deleteCourse" onclick="deleteItem('."'".'Course'."'".')">'.
+						 'Delete Selected Course</button><p>Change Course'."'".'s Instructor to: </p>'.
+						 '<select id="changeInstructor">'.$instStringBody.
+						 '<button id="changeCourseIns" onclick="changeCourseIns()">Update Teacher</button>'.
+						 '<p>Add a course with form below: </p>'.
 						 '<form id="addCourseForm"><table><tr><td allign="right"> Course Code:</td>'.
 						 '<td><input type="text" name="courseCode" id="courseCode" size="7"></td>'. 
 						 '<td allign="right"> Title:</td>'.
 						 '<td><input type="text" name="courseTitle" id="courseTitle" size="40"></td></tr>'.
 						 '<tr><td allign="right"> Term Offered:</td>'.
-						 '<td><input type="text" name="courseTerm" id="courseTerm" size="1"></td>'.
-						 '<td allign="right"> Instructor:</td>'.
-						 '<td><input type="text" name="courseInstructor" id="courseInstructor" size="8"></td>'.
-						 '<td allign="right"> Campus:</td>'.
-						 '<td><input type="text" name="courseCampus" id="courseCampus" size="5"></td></tr></table>'.
+						 '<td><input type="text" name="courseTerm" id="courseTerm" size="2"></td>'.
+						 '<td allign="right"> Instructor:</td><td>'.$instStringHead.'</td>'.
+						 '<td allign="right"> Campus:</td><td>'.$Campuses.'</tr></table>'.
 						 '<input type="submit" id="addCourse" value="Add course"></form>';
 		echo $returnString;
 		mysqli_free_result($result);
 	}
 
+
 	/* ==================== Users Request ======================== */
 
 	if(isset($_POST['Users'])){
-		$query = 'SELECT * FROM users;';
+
+
+		if (isset($_POST['Delete'])){
+			$query = 'DELETE FROM Users WHERE UTORID="'.$_POST["ID"].'";';
+			mysqli_query($dbconnect, $query);
+		}
+
+		if (isset($_POST['Add'])){
+			$query = 'INSERT INTO Users VALUES("'.$_POST["UserUtorid"].'","'.$_POST["UserFname"].
+					'","'.$_POST["UserLname"].'","'.$_POST["UserRole"].'","'.md5($_POST["UserPassword"]).'");';
+			mysqli_query($dbconnect, $query);
+			echo md5($_POST["UserPassword"]);
+		}
+
+		$query = 'SELECT * FROM Users;';
 		/* could add sort feature */
 
 		$result = mysqli_query($dbconnect, $query);
-		$returnString = '<table id="courseTable"><th align="center" colspan="4">CURRENT USERS</th>';
-		$returnString .= '<tr><td>UTORID</td><td>First Name</td><td>Last Name</td><td>Role</td>';
+		$returnString = '<table id="courseTable"><thead><th align="center" colspan="4">CURRENT USERS</th>'.
+						'<tr><td>UTORID</td><td>First Name</td><td>Last Name</td><td>Role</td></thead><tbody>';
 		while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
 			$returnString .= '<tr>';
 			for($i=0; $i <=3; $i++){
@@ -90,7 +134,20 @@
 			}
 			$returnString .= '</tr>';
 		}
-		$returnString .= '</table>';
+		$returnString .= '<tr></tbody></table><br>'.
+						 '<button id="deleteUser" onclick="deleteItem('."'".'User'."'".')">'.
+		                 'Remove Selected User</button><br>'.
+						 '<form id="addUserForm"><table><tr><td allign="right"> Utorid:</td>'.
+						 '<td><input type="text" name="userUtorid" id="userUtorid" size="10"></td>'.
+						 '</tr><tr><td allign="right"> Role:</td>'.
+						 '<td><input type="text" name="userRole" id="userRole" size="10"></td></tr>'.
+						 '<tr><td allign="right"> First Name:</td>'.
+						 '<td><input type="text" name="userFname" id="userFname" size="40"></td>'. 
+						 '</tr><tr><td allign="right"> Last Name:</td><td>'.
+						 '<input type="text" name="userLname" id="userLname" size="40"></td></tr>'.
+						 '<tr><td allign="right"> Password:</td><td>'.
+						 '<input type="password" name="userPassword" id="userPassword" size="40"></td></tr>'.
+						 '</table><input type="submit" id="addUser" value="Add User"></form>';
 		echo $returnString;
 		mysqli_free_result($result);
 	}

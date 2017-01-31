@@ -13,15 +13,20 @@ body{
 
 #courseTable{
 	border: 2px solid black;
-	height: 60%;
 	max-width: 75%;
 	text-align: left;
-	border-spacing: 10px;
+	border-spacing: 0px;
+	cell-padding: 20px;
 }
 
 #courseTable tbody tr:hover{
 	background-color: #ffff80; 
 }
+
+#courseTable td{
+	padding: 5px;
+}
+
 #selected{
 	background-color: #ff8533;
 }
