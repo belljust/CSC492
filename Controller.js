@@ -5,6 +5,7 @@
 $(document).ready(function(){
 	console.log("document.ready");
 	getPages();
+	displayPageInfo('Courses');
 });
 
 
@@ -37,9 +38,10 @@ $(document).on("click", "#courseTable tbody tr",function() {
 
 /* When Logout button is pressed*/
 $(document).on("click","#logout",function(){
-		logout();
-		console.log('logout button just pressed');
-	});
+	logout();
+	console.log('logout button just pressed');
+});
+
 
 /* When adding a new couse*/
 $(document).on("submit", "#addCourseForm",function(page) {
@@ -53,6 +55,15 @@ $(document).on("submit", "#addUserForm",function(page) {
 	addItem('User');
 });
 
+$(document).on("click","#apply",function(page){
+	page.preventDefault();
+	courseApply();
+});
+
+$(document).on("submit", "#applyForm",function(page) {
+	page.preventDefault();
+	submitApplication();
+});
 
 /* ==================== User Functions ======================== */
 
@@ -136,20 +147,27 @@ function displayPageInfo(page){
 /* Function called to send values of the selected Course from the course
 table to Controller.php to which is deleted from the database.*/
 function deleteItem(item){
-	var deleteString = "Delete=True&ID=";
-	var i = 0;
-	selectedRow.find('td').each(function(){
-		if (i==0){
-			deleteString += $(this).text();
-			i ++;
-		}
-	});
-	if (item == "User"){
-		deleteString += '&Users'
-	}else{
-		deleteString += '&Courses'
+	if(selectedRow == null){
+		alert("There's no row selected!");
 	}
-	displayPageInfo(deleteString);
+	else{
+		var deleteString = "Delete=True&ID=";
+		var i = 0;
+		selectedRow.find('td').each(function(){
+			if (i==0){
+				deleteString += $(this).text();
+				i ++;
+			}
+		});
+		if (item == "User"){
+			deleteString += '&Users'
+		}else{
+			deleteString += '&Courses'
+		}
+		if(confirm("Are you sure you wish to delete this entry?")){
+			displayPageInfo(deleteString);
+		}
+	}
 }
 
 /* Function called to send values of the add Course form to Controller.php
@@ -170,20 +188,57 @@ function addItem(item){
 					+ '&UserPassword=' + $('#userPassword').val()
 					+ '&Add=True&Users';
 	}
-	displayPageInfo(addString);
+	if(confirm("Are you sure you wish to add this entry?")){
+		displayPageInfo(addString);
+	}
 }
 
 /* Simply sends which instructor needs to be updated */
 function changeCourseIns(){
-	getCourseRowInfo();
-	var changeString = 'Instructor=';
-	changeString += $('#changeInstructor').val() + '&RowId='
+	if(selectedRow == null){
+		alert("There's no course selected!");
+	}
+	else{
+		getCourseRowInfo();
+		var changeString = 'Instructor=';
+		changeString += $('#changeInstructor').val() + '&RowId='
 				+ rowId + '&ChangeInstructor=True&Courses';
 
-	if(confirm('Are you sure you wish change this ' + rowCourse +
+		if(confirm('Are you sure you wish change this ' + rowCourse +
 				"'s instructor to " + $('#changeInstructor').val() + '?')){
-		displayPageInfo(changeString);
+			displayPageInfo(changeString);
+		}
 	}
+}
+
+/* Function as of right now just asks if user is she they wish to 
+   submit an application for the selected course */ 
+function courseApply(){
+	if(selectedRow == null){
+		alert("There's no course selected!");
+	}
+	else{
+		getCourseRowInfo();
+		if(confirm('Are you sure you wish to apply to ' + rowCourse + ' ('
+			+ rowTerm + ') with ' + rowInstructor + '?')){
+			applyString = 'RowCourse="'+ rowCourse +'"&RowTerm="' + rowTerm 
+			+ '"&RowInstructor="' + rowInstructor + '"&Late=0&ApplyRequest=';
+			displayPageInfo(applyString);
+		}	
+	} 
+}
+
+/* Takes Apllication form data and submits it */
+function submitApplication(){
+	if(confirm('Are you sure you wish to submit this application?')){
+		applyString = 'NumCourses="'+ $("#numCourses").val() +'"&TaBefore="' 
+		+ $("#taBefore").val() + '"&WorkBefore="' + $("#workBefore").val() 
+		+ '"&Grade="' + $("#grade").val() + '"&RowId="' + rowId + 
+		'"&Late=0&ApplySubmit=';
+		displayPageInfo(applyString);
+	}
+}
+
 
 /*  Retrieves all info of the selected row in the Oppourtunities  table */
 function getCourseRowInfo(){
@@ -191,8 +246,11 @@ function getCourseRowInfo(){
 	rowCourse='';
 	rowTitle='';
 	rowTerm='';
+	rowYear='';
 	rowInstructor='';
-	rowCampus = '';
+	rowCampus='';
+	rowPos='';
+	rowAvail='';
 	var i=0;
 	selectedRow.find('td').each(function(){
 		switch(i){
@@ -209,15 +267,24 @@ function getCourseRowInfo(){
         		rowTerm += $(this).text();
         		break;
         	case 4:
-        		rowInstructor += $(this).text();
+        		rowYear += $(this).text();
         		break;
         	case 5:
+        		rowInstructor += $(this).text();
+        		break;
+        	case 6:
         		rowCampus += $(this).text();
+        		break;
+        	case 7:
+        		rowPos += $(this).text();
+        		break;
+        	case 8:
+        		rowAvail += $(this).text();
         		break;
 		}
 		i++;
 	});
 }
 
-}
+
 

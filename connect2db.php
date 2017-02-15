@@ -57,7 +57,7 @@
 				$adminPages = '<center><table id="admButtons"><tr><td>'.
 				 '<button type="button" id="coursePage" onclick="displayPageInfo(' . "'Courses'" .')">Courses</botton>' .
 				 '</td><td></td><td><button id="usersPage" onclick="displayPageInfo(' . "'Users'" .')">Users</botton></td><td></td>' .
-				 '<td><button id="statsPage" onclick="displayStats()">Stats</botton></td></tr></table></center>';
+				 '<td><button id="statsPage" onclick="displayStats()">Stats</botton></td></tr></table></center><br>';
 				echo $adminPages;
 			}
 			elseif ($_SESSION['role'] == "INSTRUCTOR"){
@@ -65,14 +65,17 @@
 				$instructorPages = '<center><table id="instButtons"><tr><td>'.
 					  '<button id="coursePage" onclick="displayPageInfo(' . "'Courses'" .')">Courses</botton>'.
 					  '</td><td></td><td><button id="appPage">Applicants</botton></td><td></td>'.
-					  '<td><button id="userPage">Add User</botton></td></tr></table></center>';
+					  '<td><button id="userPage">Add User</botton></td></tr></table></center><br>';
 				echo $instructorPages;
 			}
-			else{
+			elseif ($_SESSION['role'] == "APPLICANT"){
 				/* HTML for page buttons for applicants. Displayed when $_SESSION['User'] == 'APPLICANT' */
-				$applicantPages = '<center><table id="appButtons"><tr><td><button id="coursePage">Courses</botton>'.
-					  '</td><td></td><td><button id="profile">Profile</botton></td><td></td>'.
-					  '<td><button id="contact">Contact</botton></td></tr></table></center>';
+				$applicantPages = '<center><table id="appButtons"><tr><td><button id="coursePage"'.
+					  'onclick="displayPageInfo(' . "'Courses'" .')">Courses</botton>'.
+					  '</td><td><button id="profile">Profile</botton></td><td>'.
+					  '<button id="applications" onclick="displayPageInfo('."'My_Applications'".')">'.
+					  'My Applications</botton></td>'.
+					  '<td><button id="contact">Contact</botton></td></tr></table></center><br>';
 				echo $applicantPages;
 			}
 		}

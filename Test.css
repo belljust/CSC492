@@ -30,3 +30,12 @@ body{
 #selected{
 	background-color: #ff8533;
 }
+
+input {
+	outline: 1px solid grey;
+}
+
+#myAppTable{
+	padding: 5px;
+	border-spacing: 10px;
+}
