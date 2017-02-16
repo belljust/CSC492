@@ -144,8 +144,8 @@
 		mysqli_free_result($result);
 
 		/* Adding the answers from post into Answers table. */
-		$query = 'INSERT INTO ANSWERS VALUES('.($row[0] + 1).','.$_POST['NumCourses'].','.$_POST['TaBefore'].
-			   	 ','.$_POST['WorkBefore'].','.$_POST['Grade'].');';
+		$query = 'INSERT INTO ANSWERS VALUES('.($row[0] + 1).','.$_POST['NumCourses'].','.$_POST['WorkBefore'].
+			   	 ','.$_POST['TaBefore'].','.$_POST['Grade'].');';
 		mysqli_query($dbconnect, $query);
 
 		/* Adding the Application info into applications table. */
