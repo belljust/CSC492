@@ -128,7 +128,7 @@
 						'<tr><td allign="right"> Have you worked for this Prof before?: </td>'.
 						'<td><select id="workBefore"><option value="yes">YES</option><option value="no">NO</option>'.
 						'<tr><td allign="right"> Grade you received in this course? (0-100): </td>'.
-						'<td><input type="text" name="grade" id="grade" maxlength="2" size="3" placeholder="65">'.
+						'<td><input type="text" name="grade" id="grade" maxlength="3" size="4" placeholder="65">'.
 						'</td></tr><tr><td><input type="submit" id="applySubmit" value="Submit Application">'.
 						'</td></tr></table></form></center>';
 		echo $returnString;
@@ -144,8 +144,8 @@
 		mysqli_free_result($result);
 
 		/* Adding the answers from post into Answers table. */
-		$query = 'INSERT INTO ANSWERS VALUES('.($row[0] + 1).','.$_POST['NumCourses'].','.$_POST['TaBefore'].
-			   	 ','.$_POST['WorkBefore'].','.$_POST['Grade'].');';
+		$query = 'INSERT INTO ANSWERS VALUES('.($row[0] + 1).','.$_POST['NumCourses'].','.$_POST['WorkBefore'].
+			   	 ','.$_POST['TaBefore'].','.$_POST['Grade'].');';
 		mysqli_query($dbconnect, $query);
 
 		/* Adding the Application info into applications table. */
@@ -155,6 +155,23 @@
 		echo "<br><p>Thanks, Your Application has been submitted!</p>";
 	}
 
+	if(isset($_POST['All_Applications'])) {
+		$returnString = '<table id="allAppTable"><thead><th align="center" colspan="5">'.
+						'All Applications</th><tr><td>UTORID</td><td>Course Code</td><td>Term</td>'.
+						'<td>Year</td><td>Instructor</td><td>Campus</td></tr></thead><tbody>';
+		$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS '.
+				 'FROM (COURSE NATURAL JOIN APPLICATIONS);';
+		$result = mysqli_query($dbconnect, $query);
+		while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
+			$returnString .= '<tr>';
+			for($i=0; $i<=5; $i++){
+				$returnString .= '<td>'.$row[$i].'</td>';
+			}
+			$returnString .= '</tr>';
+		}
+		$returnString.= '</tbody></table><br>';
+		echo $returnString;
+	}
 
 	if(isset($_POST['My_Applications'])) {
 		$returnString = '<table id="myAppTable"><thead><th align="center" colspan="5">'.
