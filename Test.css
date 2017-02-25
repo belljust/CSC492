@@ -1,29 +1,61 @@
+body{
+	position: fixed;
+	height: 100%; 
+	width: 100%;
+	margin: 0;
+}
+
+h1{
+	color: black;
+}
+th{
+	color: black;
+	border-bottom: 2px solid black;
+}
+
+#loggedInUser{
+	color: red;
+	position: fixed;
+	right: 30px;
+	bottom: 10px;
+}
+
 #UofTLogo{
 	height: 80px;
 	width: 240px;
 }
 
 #bannerTable{
+	position: relative;
+	top: 0;
 	width: 100%;
+	background-color: #5e8cd6;
+	border-bottom: 4px solid black;
 }
 
 body{
 	color: blue;
 }
 
-#courseTable{
+#courseTable, #allAppTable, #userTable{
+
 	border: 2px solid black;
-	max-width: 75%;
 	text-align: left;
 	border-spacing: 0px;
 	cell-padding: 20px;
+	overflow: scroll;
+	text-align: center; 
+	width: 100%;
 }
 
 #courseTable tbody tr:hover{
 	background-color: #ffff80; 
 }
+#allAppTable tbody tr:hover{
+	background-color: #ffff80; 
+}
 
-#courseTable td{
+#courseTable td, #allAppTable td{
 	padding: 5px;
 }
 
@@ -38,4 +70,28 @@ input {
 #myAppTable{
 	padding: 5px;
 	border-spacing: 10px;
+}
+
+#myProfileTable p{
+	text-indent: 20pt;
+}
+
+#pWhy, #pTAVol, #pTAExp{
+	resize: vertical;
+	height: 80px;
+}
+
+#pageInfo{
+	position: absolute;
+	height: 100%;
+	width: 100%;
+    overflow: scroll;
+}
+
+#tableWrap{
+	background-color: #aeccfc;
+	position: relative;
+	max-height: 50%;
+	max-width: 65%;
+	overflow: scroll;
 }

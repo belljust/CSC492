@@ -28,8 +28,14 @@
       <div id="pageButtons">
         <!-- Display the page buttons here -->
       </div>
-      <div id="pageInfo">
-      <!-- Display the page content here -->
+
+        <div id="pageInfo">
+          <!-- Display the page content here -->
+        </div>
+     
+      <div id="errorMessage">
+        <!-- Display error messages here -->
+      </div>
     </center>
   </body>
 </html>
