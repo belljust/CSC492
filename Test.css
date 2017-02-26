@@ -1,5 +1,5 @@
 body{
-	position: fixed;
+	position: relative;
 	height: 100%; 
 	width: 100%;
 	margin: 0;
@@ -51,9 +51,14 @@ body{
 #courseTable tbody tr:hover{
 	background-color: #ffff80; 
 }
+#userTable tbody tr:hover{
+	background-color: #ffff80; 
+}
 #allAppTable tbody tr:hover{
 	background-color: #ffff80; 
 }
+
+
 
 #courseTable td, #allAppTable td{
 	padding: 5px;
@@ -82,9 +87,6 @@ input {
 }
 
 #pageInfo{
-	position: absolute;
-	height: 100%;
-	width: 100%;
     overflow: scroll;
 }
 

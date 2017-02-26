@@ -24,12 +24,11 @@ $(document).on("hover", "#pageInfo tbody tr",function() {
 		$(this).css("background-color", "#ffff80");
 });
 
-/* As of right now can't reset on hover value after a row is selected*/
-/* When selecting a row from the table of courses*/
+/* When selecting a row from the table of courses */
 selectedRow = null;
 $(document).on("click", "#courseTable tbody tr",function() {
 	if (selectedRow != null){
-		selectedRow.css("background-color", "white");
+		selectedRow.css("background-color", "#aeccfc");
 	} 
 	$(this).css("background-color", "#ff8533");
 	selectedRow = $(this);
@@ -37,11 +36,22 @@ $(document).on("click", "#courseTable tbody tr",function() {
 
 $(document).on("click", "#allAppTable tbody tr",function() {
 	if (selectedRow != null){
-		selectedRow.css("background-color", "white");
+		selectedRow.css("background-color", "#aeccfc");
 	} 
 	$(this).css("background-color", "#ff8533");
 	selectedRow = $(this);
 });
+
+/* When selecting a row from the table of users */
+selectedRow = null;
+$(document).on("click", "#userTable tbody tr",function() {
+	if (selectedRow != null){
+		selectedRow.css("background-color", "#aeccfc");
+	} 
+	$(this).css("background-color", "#ff8533");
+	selectedRow = $(this);
+});
+
 
 /* When Logout button is pressed*/
 $(document).on("click","#logout",function(){
@@ -50,7 +60,7 @@ $(document).on("click","#logout",function(){
 });
 
 
-/* When adding a new couse*/
+/* When adding a new course*/
 $(document).on("submit", "#addCourseForm",function(page) {
 	page.preventDefault();
 	addItem('Course');
@@ -220,6 +230,20 @@ function addItem(item){
 			$("#retypePassword").css("background-color", "#ffffff");
 			return;
 
+		}else if($("#userFname").val().trim() == ''){
+			$("#errorMessage").text('Your first name cannot be empty!');
+			$("#userUtorid").css("background-color", "#ff3333");
+			$("#userPassword").css("background-color", "#ffffff");
+			$("#retypePassword").css("background-color", "#ffffff");
+			return;
+			
+		}else if($("#userLname").val().trim() == ''){
+			$("#errorMessage").text('Your last name cannot be empty!');
+			$("#userUtorid").css("background-color", "#ff3333");
+			$("#userPassword").css("background-color", "#ffffff");
+			$("#retypePassword").css("background-color", "#ffffff");
+			return;
+			
 		}else{
 			var addString = 'UserUtorid=' + $('#userUtorid').val()
 						+ '&UserRole=' + $('#userRole').val()

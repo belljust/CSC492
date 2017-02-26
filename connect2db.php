@@ -60,8 +60,8 @@
 					'</td><td><button id="usersPage" onclick="displayPageInfo(' . "'Users'" .
 					')">Users</button></td>'.
 					'</td><td><button id="appPage" onclick="displayPageInfo(' . "'All_Applications'" .')">All Applications</button></td>'.
-					'<td><button id="statsPage" onclick="displayStats()">Stats</button></td>
-					</tr></table></center><br>';
+					'<td><button id="statsPage" onclick="displayStats()">Stats</button></td>'.
+					'<td id="loggedInUser">Logged in as: '. $_SESSION['user'].'</td></tr></table></center><br>';
 				echo $adminPages;
 			}
 			elseif ($_SESSION['role'] == "INSTRUCTOR"){
@@ -69,18 +69,20 @@
 				$instructorPages = '<center><table id="instButtons"><tr><td>'.
 					'<button type="button" id="coursePage" onclick="displayPageInfo(' . "'Courses'" .')">Courses</button>'.
 					'<td><button id="usersPage" onclick="displayPageInfo(' . "'Users'" .')">Users</button></td>'.
-					'</td><td><button id="appPage" onclick="displayPageInfo(' . "'All_Applications'" .')">All Applications</button></td>
-					</tr></table></center><br>';
+					'</td><td><button id="appPage" onclick="displayPageInfo(' . "'All_Applications'" .')">All Applications</button></td>'.
+					'<td id="loggedInUser">Logged in as: '. $_SESSION['user'].'</td></tr></table></center><br>';
 				echo $instructorPages;
 			}
 			elseif ($_SESSION['role'] == "APPLICANT"){
 				/* HTML for page buttons for applicants. Displayed when $_SESSION['User'] == 'APPLICANT' */
 				$applicantPages = '<center><table id="appButtons"><tr><td><button id="coursePage"'.
 					  'onclick="displayPageInfo(' . "'Courses'" .')">Courses</button>'.
-					  '</td><td><button id="profile">Profile</button></td><td>'.
+					  '</td><td><button id="profile" onclick="getProfile('."'MyProfile'".')">'.
+					  'My Profile</button></td><td>'.
 					  '<button id="applications" onclick="displayPageInfo('."'My_Applications'".')">'.
 					  'My Applications</button></td>'.
-					  '<td><button id="contact">Contact</button></td></tr></table></center><br>';
+					  '<td><button id="contact">Contact</botton></td>'.
+					  '<td id="loggedInUser">Logged in as: '. $_SESSION['user'].'</td></tr></table></center><br>';
 				echo $applicantPages;
 			}
 		}
