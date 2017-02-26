@@ -45,9 +45,9 @@
 			$loginTable = '<form id ="contentForm" method="post" action="">'.
       			'<table id="login_table" style="border:2px solid black;">'.
 				'<tr><th align="center" colspan="2">Login using a valid UTORID</th></tr>'.
-				'<tr><td allign="right"> UTORID:</td><td>'.
+				'<tr><td align="right"> UTORID:</td><td>'.
 				'<input type="text" name="utorid" id="utorid" size="8"> </td></tr>'.
-				'<tr><td allign="right"> Password:</td><td>'.
+				'<tr><td align="right"> Password:</td><td>'.
 				'<input type="password" name="password" id="password" size="15"> </td></tr>'.
 				'<tr><td align="right" colspan="2"> <input type="submit" id="login" value="Login">'.
 				'</button></td></tr></table></form>';

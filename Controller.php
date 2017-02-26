@@ -54,7 +54,6 @@
 			$result = mysqli_query($dbconnect, $query);
 		}
 		
-
 		$query = 'SELECT * FROM Course;';
 		/* could add sort feature */
 
@@ -108,7 +107,7 @@
 				}
 				$years.= '</select>';
 			/* ===================================================================================== */
-
+	
 
 			/* Creates the html code for the Course Table and the form for adding a course underneath */
 			$returnString .= '<table><tr><td>Remove a course: </td><td>'.
@@ -177,11 +176,19 @@
 	}
 
 	if(isset($_POST['All_Applications'])) {
+		if (isset($_POST['Sort'])){
+			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS '.
+				 'FROM (COURSE NATURAL JOIN APPLICATIONS) ORDER BY ' . $_POST['SortValue'] . ';';
+		
+		}else{		
+			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS '.
+				 'FROM (COURSE NATURAL JOIN APPLICATIONS);';
+		}
+
 		$returnString = '<div id="tableWrap"><table id="allAppTable"><thead><th align="center" colspan="6">'.
 						'All Applications</th><tr><td>UTORID</td><td>Course Code</td><td>Term</td>'.
-						'<td>Year</td><td>Instructor</td><td>Campus</td></tr></thead><tbody>';
-		$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS '.
-				 'FROM (COURSE NATURAL JOIN APPLICATIONS);';
+						'<td>Year</td><td>Instructor</td><td>Campus</td></tr></thead><tbody>';	 
+				 
 		$result = mysqli_query($dbconnect, $query);
 		while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
 			$returnString .= '<tr>';
@@ -191,10 +198,19 @@
 			$returnString .= '</tr>';
 		}
 		$returnString.= '</tbody></table></div><br><button id="viewProfile"'.
-						'onclick="getProfile('."'Instructor')".'">View Profile</button>';
+						'onclick="getProfile('."'Instructor')".'">View Profile</button><br>';
+		
+		$returnString.= 'Sort by: <label for="Sort"></label><select id="appSort">
+						<option value="UTORID">	UTORID</option>
+						<option value="Code"> Course Code</option>
+						<option value="Semester"> Term</option>
+						<option value="Year"> Year</option>
+						<option value="Instructor"> Instructor</option>
+						<option value="Campus">	Campus</option></select>';
+		
 		echo $returnString;
 	}
-
+	
 	if(isset($_POST['My_Applications'])) {
 		$returnString = '<table id="myAppTable"><thead><th align="center" colspan="5">'.
 						'My Applications</th><tr><td>Course Code</td><td>Term</td>'.
@@ -282,7 +298,6 @@
 			$result = mysqli_query($dbconnect, $query);
 			$returnString = '<form id="editApplication"><table id="myProfileTable"><tr>'.
 							'<th align="center" colspan="12">';
-
 
 			if(isset($_POST['EditProfile'])){
 				/* Create selects for preference choices */

@@ -90,16 +90,24 @@ $(document).on("submit", "#editApplication",function(page) {
 $(document).on("focus", "#myProfileTable select",function() {
 	currentVal = $(this).val();
 });
+
 $(document).on("change", "#myProfileTable select",function() {
 	checkValues(this.id,currentVal,$(this).val());
-
 });
+
+// When a Sort value is selected
+$(document).on("change", "#appSort", function() {
+	sortString = 'Sort=True&SortValue=' + $(this).val() + '&All_Applications';
+	displayPageInfo(sortString);
+});
+
+
 
 /* ==================== User Functions ======================== */
 
 /* Function creates a JSON word and sends it to
 	connect2b.php to find $_SESSION variables about
-	current user loging in. */
+	current user logging in. */
 function login(){
 	var utorId = $("#utorid").val();
 	var password = $("#password").val();
@@ -121,7 +129,7 @@ function login(){
 
 /* Function creates a JSON word and sends it to
 	connect2b.php to find $_SESSION variables about
-	current user loging in. */
+	current user logging in. */
 function logout(){
 	var loginString = "Logout=True";
 	$.ajax({
@@ -294,7 +302,7 @@ function courseApply(){
 	} 
 }
 
-/* Takes Apllication form data and submits it */
+/* Takes Application form data and submits it */
 function submitApplication(){
 	if(confirm('Are you sure you wish to submit this application?')){
 		applyString = 'NumCourses="'+ $("#numCourses").val() +'"&TaBefore="' 
