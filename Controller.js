@@ -19,11 +19,6 @@ $(document).on("submit", "#contentForm",function(page) {
 	$('#password').val('');
 });
 
-/* When hover mouse over table rows*/
-$(document).on("hover", "#pageInfo tbody tr",function() {
-		$(this).css("background-color", "#ffff80");
-});
-
 /* When selecting a row from the table of courses */
 selectedRow = null;
 $(document).on("click", "#courseTable tbody tr",function() {
@@ -34,16 +29,13 @@ $(document).on("click", "#courseTable tbody tr",function() {
 	selectedRow = $(this);
 });
 
-$(document).on("click", "#allAppTable tbody tr",function() {
-	if (selectedRow != null){
-		selectedRow.css("background-color", "#aeccfc");
-	} 
-	$(this).css("background-color", "#ff8533");
-	selectedRow = $(this);
-});
+//$("#allAppTable tbody tr").hover(function(){console.log('hi')},function(){console.log('bye')});
+
+
+
 
 /* When selecting a row from the table of users */
-selectedRow = null;
+//selectedRow = null;
 $(document).on("click", "#userTable tbody tr",function() {
 	if (selectedRow != null){
 		selectedRow.css("background-color", "#aeccfc");
@@ -97,10 +89,28 @@ $(document).on("change", "#myProfileTable select",function() {
 
 // When a Sort value is selected
 $(document).on("change", "#appSort", function() {
+	prevSort = $(this).val();
+	//console.log(prevSort);
 	sortString = 'Sort=True&SortValue=' + $(this).val() + '&All_Applications';
 	displayPageInfo(sortString);
 });
 
+
+$(document).on("mousedown", "#allAppTable tbody tr",function() {
+	selectedRow = $(this);
+});
+
+$(document).on("focus", '#allAppTable select', function(){
+	prevTag = $(this).val();
+	console.log(prevTag);	
+});
+	
+$(document).on("change", "#allAppTable select", function(e){
+	e.stopPropagation();
+	if(confirm("Are you sure you wish to change this application's status?")){
+		changeTag($(this).val(),prevTag);
+	}
+});
 
 
 /* ==================== User Functions ======================== */
@@ -167,16 +177,24 @@ function getPages(){
 	in the 'page' paramter sent from other functions in Controller.js.*/
 function displayPageInfo(page){
 	var postString = page+"=True";
-	console.log(postString);
+	//console.log(postString);
 	$.ajax({
 		type: "POST",
 		url: "Controller.php",
 		data: postString,
 		success: function(response){
-			//console.log(response);
+			//console.log(JSON.parse(response));
+
 			$("#pageInfo").html(response.replace('placeValues()',''));
+			$("#pageInfo").html(response.replace('changeSort',''));
+			$("#pageInfo").html(response.replace('getTags()',''));
+
 			if(response.includes("placeValues()")){
 				placeValues();
+			}else if(response.includes(("changeSort"))){
+				$("#appSort").val(prevSort);
+			}else if(response.includes(("getTags()"))){
+				updateTags();
 			}
 		},
 		error: function(){
@@ -415,6 +433,73 @@ function checkValues(id,prevValue,newValue){
 	}
 	
 }
+
+function updateTags() {
+	var i = 0;
+	$("#allAppTable").find('.selectTd').each(function(){
+		var tagId = 'tag' + i;
+		var selectTag = '<select id="' + tagId +'">' +
+						 '<option value="Pending">Pending</option>' +
+						 '<option value="Yes">Granted</option>' +
+						 '<option value="Maybe">Maybe</option>' +
+						 '<option value="No">No</option></select>';
+
+		//console.log('"' + $(this).text()+'"');
+		tagValue = $(this).text();
+		$(this).html(selectTag);
+		var idid = '#' + tagId;
+		$(idid).val(tagValue);
+
+		switch($(idid).val()){
+			case 'No':
+				$(idid).css("background-color","red");
+				break;
+			case 'Yes':
+				$(idid).css("background-color","green");
+				break;
+			case 'Maybe':
+				$(idid).css("background-color","yellow");
+				break;
+			default:
+				$(idid).css("background-color","#cec8c9");
+				break;
+		}
+		i++;
+	});
+}
+
+function changeTag(newTag, oldTag){
+	tagUtorid = '', tagCourse = '';
+	tagTerm = '', tagYear = '';
+	var i=0;
+	selectedRow.find('td').each(function(){
+		switch(i){
+    		case 0:
+        		tagUtorid = $(this).text();
+        		break;
+    		case 1:
+        		tagCourse = $(this).text();
+        		break;
+        	case 2:
+        		tagTerm = $(this).text();
+        		break;
+        	case 3:
+        		tagYear = $(this).text();
+        		break;
+		}
+		i++;
+	});
+	var changeString = 'All_Applications=True&TagUtorid="' +
+				tagUtorid + '"&TagCourse="' + tagCourse +
+				'"&TagValue="' + newTag + '"&OldTag="' + oldTag +
+				'"&TagTerm="' + tagTerm +'"&TagYear="' + tagYear +
+				'"&ChangeTag';
+	//console.log(changeString);
+	displayPageInfo(changeString);
+
+}
+
+
 /*  Retrieves all info of the selected row in the Oppourtunities  table */
 function getCourseRowInfo(){
 	rowId = '', rowCourse = '', rowTitle = '', rowTerm = '', rowYear = '';

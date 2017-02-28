@@ -170,30 +170,93 @@
 
 		/* Adding the Application info into applications table. */
 		$query = 'INSERT INTO APPLICATIONS VALUES ("'.$_SESSION['user'].'",'.$_POST['RowId'].',"'.
-				 $_POST['Late'].'","'.($row[0] + 1).'","UNSET");';
+				 $_POST['Late'].'","'.($row[0] + 1).'","Pending");';
 		mysqli_query($dbconnect, $query);
 		echo "<br><p>Thanks, Your Application has been submitted!</p>";
 	}
 
 	if(isset($_POST['All_Applications'])) {
+		$returnString = 'getTags()<div id="tableWrap"><table id="allAppTable"><thead><th align="center" colspan="7">'.
+						'All Applications</th><tr><td>UTORID</td><td>Course Code</td><td>Term</td>'.
+						'<td>Year</td><td>Instructor</td><td>Campus</td><td>Status</td></tr></thead><tbody>';	
+	
+		if(isset($_POST['ChangeTag'])){
+			
+			if($_POST['TagValue'] == '"Yes"'){
+				$query = 'SELECT CID,Total_Positions,POSITIONS_AVAILABLE FROM'.
+						 ' (SELECT * FROM APPLICATIONS NATURAL JOIN COURSE) AS TEST WHERE CODE='.
+						 $_POST['TagCourse'].' AND UTORID='.$_POST['TagUtorid'].
+					  	' AND SEMESTER='.$_POST['TagTerm'].' AND YEAR='.$_POST['TagYear'].';';
+				
+				$result = mysqli_query($dbconnect, $query);
+				$row =  mysqli_fetch_array($result, MYSQLI_NUM);
+
+				if($row[2] > 0){
+					
+					$query =  'UPDATE APPLICATIONS SET TAG='.$_POST['TagValue'].' WHERE CID='.
+					  	'(SELECT CID FROM (SELECT * FROM APPLICATIONS NATURAL JOIN COURSE) AS TEST WHERE CODE='.
+					  	$_POST['TagCourse'].' AND UTORID='.$_POST['TagUtorid'].
+					  	' AND SEMESTER='.$_POST['TagTerm'].' AND YEAR='.$_POST['TagYear'].
+					  	') AND UTORID='.$_POST['TagUtorid'].';';
+					mysqli_query($dbconnect, $query); 
+					
+					$query2 = 'UPDATE COURSE SET POSITIONS_AVAILABLE='. ($row[2]-1).
+							  ' WHERE CID='.$row[0].';';
+					mysqli_query($dbconnect, $query2);
+					
+				}
+
+			}
+			else{
+				$query =  'UPDATE APPLICATIONS SET TAG='.$_POST['TagValue'].' WHERE CID='.
+					  	'(SELECT CID FROM (SELECT * FROM APPLICATIONS NATURAL JOIN COURSE) AS TEST WHERE CODE='.
+					  	$_POST['TagCourse'].' AND UTORID='.$_POST['TagUtorid'].
+					  	' AND SEMESTER='.$_POST['TagTerm'].' AND YEAR='.$_POST['TagYear'].
+					  	') AND UTORID='.$_POST['TagUtorid'].';';
+					mysqli_query($dbconnect, $query);
+
+				
+				if(!($_POST['TagValue'] == '"Yes"') && ($_POST['OldTag'] == '"Yes"')){ 
+					$query = 'SELECT CID,Total_Positions,POSITIONS_AVAILABLE FROM'.
+						 ' (SELECT * FROM APPLICATIONS NATURAL JOIN COURSE) AS TEST WHERE CODE='.
+						 $_POST['TagCourse'].' AND UTORID='.$_POST['TagUtorid'].
+					  	' AND SEMESTER='.$_POST['TagTerm'].' AND YEAR='.$_POST['TagYear'].';';
+					$result = mysqli_query($dbconnect, $query);
+					$row =  mysqli_fetch_array($result, MYSQLI_NUM);
+
+					$query2 = 'UPDATE COURSE SET POSITIONS_AVAILABLE='. ($row[2]+1).
+							  ' WHERE CID='.$row[0].';';
+					mysqli_query($dbconnect, $query2);
+				}
+			}
+			
+
+		}
+
 		if (isset($_POST['Sort'])){
-			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS '.
+			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS,TAG '.
 				 'FROM (COURSE NATURAL JOIN APPLICATIONS) ORDER BY ' . $_POST['SortValue'] . ';';
-		
+			$returnString.= "changeSort";
 		}else{		
-			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS '.
+			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS,TAG '.
 				 'FROM (COURSE NATURAL JOIN APPLICATIONS);';
 		}
 
-		$returnString = '<div id="tableWrap"><table id="allAppTable"><thead><th align="center" colspan="6">'.
-						'All Applications</th><tr><td>UTORID</td><td>Course Code</td><td>Term</td>'.
-						'<td>Year</td><td>Instructor</td><td>Campus</td></tr></thead><tbody>';	 
-				 
+		/* Create select option of Tag values */
+		$tags = '<select class="tagSelect"><option value="Pending">Pending</option>
+										 <option value="Granted">Granted</option>
+										 <option value="Maybe">Maybe</option>
+										 <option value="No">No</option></select>';
+		$tagValues = array();
 		$result = mysqli_query($dbconnect, $query);
 		while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
 			$returnString .= '<tr>';
-			for($i=0; $i<=5; $i++){
-				$returnString .= '<td>'.$row[$i].'</td>';
+			for($i=0; $i<=6; $i++){
+				if($i<6){
+					$returnString .= '<td>'.$row[$i].'</td>';
+				}else{
+					$returnString .= '<td class="selectTd">'.$row[$i].'</td>';
+				}
 			}
 			$returnString .= '</tr>';
 		}
@@ -206,7 +269,8 @@
 						<option value="Semester"> Term</option>
 						<option value="Year"> Year</option>
 						<option value="Instructor"> Instructor</option>
-						<option value="Campus">	Campus</option></select>';
+						<option value="Tag">Status</option></select>';
+		
 		
 		echo $returnString;
 	}

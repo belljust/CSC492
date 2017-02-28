@@ -9,7 +9,7 @@
     <title>CSC492</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="Test.css">
-    <script JQUERY src="jquery-2.1.0.js"></script>
+    <script JQUERY src="jquery-3.1.1.min.js"></script>
     <script Controller src="Controller.js"></script>
   </head>
   
