@@ -95,3 +95,10 @@ input {
 	max-width: 65%;
 	overflow: scroll;
 }
+
+select #green{
+	background-color: green;
+}
+#errorMessage{
+	color: red;
+}

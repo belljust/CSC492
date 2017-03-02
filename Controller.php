@@ -252,7 +252,11 @@
 		while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
 			$returnString .= '<tr>';
 			for($i=0; $i<=6; $i++){
-				if($i<6){
+				if($i==0){
+					$returnString .= '<td onclick="getProfile('."'".$row[$i]."')".'">'.
+									 $row[$i].'</td>';
+				}
+				elseif($i<6){
 					$returnString .= '<td>'.$row[$i].'</td>';
 				}else{
 					$returnString .= '<td class="selectTd">'.$row[$i].'</td>';

@@ -1,23 +1,18 @@
 
 /* ==================== Document.ready ======================== */
 
-/* Event listener that look for actions on page */
+/* Gather Session info, display page info accordingly */
 $(document).ready(function(){
 	console.log("document.ready");
 	getPages();
 	displayPageInfo('Courses');
 });
 
+/* ================================================================================= */
+/* ============================== Event Listeners ================================== */
+/* ================================================================================= */
 
-/* ==================== Event Listeners ======================== */
-
-/* When login form is submitted*/
-$(document).on("submit", "#contentForm",function(page) {
-	page.preventDefault();
-	login();
-	$('#utorid').val('');
-	$('#password').val('');
-});
+/* ================== ADMIN Course Page ====================== */
 
 /* When selecting a row from the table of courses */
 selectedRow = null;
@@ -27,15 +22,19 @@ $(document).on("click", "#courseTable tbody tr",function() {
 	} 
 	$(this).css("background-color", "#ff8533");
 	selectedRow = $(this);
+	getCourseRowInfo();
+	$("#changeInstructor").val(rowInstructor);
 });
 
-//$("#allAppTable tbody tr").hover(function(){console.log('hi')},function(){console.log('bye')});
+/* When adding a new course*/
+$(document).on("submit", "#addCourseForm",function(page) {
+	page.preventDefault();
+	addItem('Course');
+});
 
-
-
+/* ====================== Users Page =========================== */
 
 /* When selecting a row from the table of users */
-//selectedRow = null;
 $(document).on("click", "#userTable tbody tr",function() {
 	if (selectedRow != null){
 		selectedRow.css("background-color", "#aeccfc");
@@ -44,25 +43,61 @@ $(document).on("click", "#userTable tbody tr",function() {
 	selectedRow = $(this);
 });
 
-
-/* When Logout button is pressed*/
-$(document).on("click","#logout",function(){
-	logout();
-	console.log('logout button just pressed');
-});
-
-
-/* When adding a new course*/
-$(document).on("submit", "#addCourseForm",function(page) {
-	page.preventDefault();
-	addItem('Course');
-});
-
-/* When adding a new User*/
+/* When adding a new User */
 $(document).on("submit", "#addUserForm",function(page) {
 	page.preventDefault();
 	addItem('User');
 });
+
+/* ================= ADMIN Application Page ==================== */
+
+/* When a sort value is selected */
+$(document).on("change", "#appSort", function() {
+	prevSort = $(this).val();
+	sortString = 'Sort=True&SortValue=' + $(this).val() + 
+				'&All_Applications';
+	displayPageInfo(sortString);
+});
+
+/* Extract the information from the row before a tag change */
+$(document).on("mousedown", "#allAppTable tbody tr",function() {
+	selectedRow = $(this);
+});
+
+/* Collect old tage value */
+$(document).on("focus", '#allAppTable select', function(){
+	prevTag = $(this).val();
+	console.log(prevTag);	
+});
+
+/* Collect new tag value */
+$(document).on("change", "#allAppTable select", function(e){
+	e.stopPropagation();
+	if(confirm("Are you sure you wish to change this " + 
+		"application's status?")){
+		changeTag($(this).val(),prevTag);
+	}
+});
+/* ================= Student Application Page ================== */
+
+/* When applicant wishes to apply to a course */
+$(document).on("submit", "#editApplication",function(page) {
+	page.preventDefault();
+	updateProfile();
+});
+
+/* Gather old preference value in profile table */
+$(document).on("focus", "#myProfileTable select",function() {
+	currentVal = $(this).val();
+});
+
+/* Gather new preference value in profile table */
+$(document).on("change", "#myProfileTable select",function() {
+	checkValues(this.id,currentVal,$(this).val());
+});
+
+
+/* ==================== Student Course Page ==================== */
 
 $(document).on("click","#apply",function(page){
 	page.preventDefault();
@@ -74,50 +109,36 @@ $(document).on("submit", "#applyForm",function(page) {
 	submitApplication();
 });
 
-$(document).on("submit", "#editApplication",function(page) {
+
+/* ================== Login/ Logout Features =================== */
+
+/* When login form is submitted*/
+$(document).on("submit", "#contentForm",function(page) {
 	page.preventDefault();
-	updateProfile();
+	login();
+	$('#utorid').val('');
+	$('#password').val('');
 });
 
-$(document).on("focus", "#myProfileTable select",function() {
-	currentVal = $(this).val();
-});
-
-$(document).on("change", "#myProfileTable select",function() {
-	checkValues(this.id,currentVal,$(this).val());
-});
-
-// When a Sort value is selected
-$(document).on("change", "#appSort", function() {
-	prevSort = $(this).val();
-	//console.log(prevSort);
-	sortString = 'Sort=True&SortValue=' + $(this).val() + '&All_Applications';
-	displayPageInfo(sortString);
+/* When Logout button is pressed*/
+$(document).on("click","#logout",function(){
+	logout();
+	console.log('logout button just pressed');
 });
 
 
-$(document).on("mousedown", "#allAppTable tbody tr",function() {
-	selectedRow = $(this);
-});
-
-$(document).on("focus", '#allAppTable select', function(){
-	prevTag = $(this).val();
-	console.log(prevTag);	
-});
-	
-$(document).on("change", "#allAppTable select", function(e){
-	e.stopPropagation();
-	if(confirm("Are you sure you wish to change this application's status?")){
-		changeTag($(this).val(),prevTag);
-	}
-});
 
 
-/* ==================== User Functions ======================== */
 
-/* Function creates a JSON word and sends it to
-	connect2b.php to find $_SESSION variables about
-	current user logging in. */
+
+/* ================================================================================= */
+/* ============================== User Functions =================================== */
+/* ================================================================================= */
+
+/* ==================== Login/ Logout Features ===================== */
+
+/* Function creates a JSON word and sends it to connect2b.php to find 
+   $_SESSION variables about current user logging in. */
 function login(){
 	var utorId = $("#utorid").val();
 	var password = $("#password").val();
@@ -137,9 +158,8 @@ function login(){
 	})
 }
 
-/* Function creates a JSON word and sends it to
-	connect2b.php to find $_SESSION variables about
-	current user logging in. */
+/* Function creates a JSON word and sends it to connect2b.php to find 
+$_SESSION variables about current user logging in. */
 function logout(){
 	var loginString = "Logout=True";
 	$.ajax({
@@ -152,12 +172,10 @@ function logout(){
 	})
 }
 
-/* function called to retrieve session variables
-	then calls displayButtons() with appropraite 
-	page data based on role assigned */
+/* Function called to retrieve session variables then calls 
+   displayButtons() with appropraite page data based on role assigned */
 function getPages(){
 	var loginString = "GetPages=True";
-
 	$.ajax({
 		type: "POST",
 		url: "connect2db.php",
@@ -169,32 +187,30 @@ function getPages(){
 }
 
 
-/* ==================== Page Display Functions ======================== */
-
+/* ======================= Page Display Functions ========================== */
 
 /* The function that actually does the sending of the variables through 
 	an Ajax call to Controller.php based on collected information stored
-	in the 'page' paramter sent from other functions in Controller.js.*/
+	in the 'page' paramter sent from other functions in Controller.js. */
 function displayPageInfo(page){
 	var postString = page+"=True";
-	//console.log(postString);
 	$.ajax({
 		type: "POST",
 		url: "Controller.php",
 		data: postString,
 		success: function(response){
-			//console.log(JSON.parse(response));
-
-			$("#pageInfo").html(response.replace('placeValues()',''));
-			$("#pageInfo").html(response.replace('changeSort',''));
-			$("#pageInfo").html(response.replace('getTags()',''));
 
 			if(response.includes("placeValues()")){
+				$("#pageInfo").html(response.replace('placeValues()',''));
 				placeValues();
 			}else if(response.includes(("changeSort"))){
+				$("#pageInfo").html(response.replace('changeSort',''));
 				$("#appSort").val(prevSort);
 			}else if(response.includes(("getTags()"))){
+				$("#pageInfo").html(response.replace('getTags()',''));
 				updateTags();
+			}else{
+				$("#pageInfo").html(response);
 			}
 		},
 		error: function(){
@@ -202,6 +218,8 @@ function displayPageInfo(page){
 		}
 	})
 }
+
+/* ======================= Course Page Functions ========================== */
 
 /* Function called to send values of the selected Course from the course
 table to Controller.php to which is deleted from the database.*/
@@ -229,8 +247,8 @@ function deleteItem(item){
 	}
 }
 
-/* Function called to send values of the add Course form to Controller.php
-	to which is added to the database.*/
+/* Function called to either add a course a user to the database Also 
+   returns error messages when appropriate.*/
 function addItem(item){
 	if (item == 'Course'){
 		var addString = 'CourseCode=' + $('#courseCode').val()
@@ -241,6 +259,7 @@ function addItem(item){
 					+ '&TaPositions=' + $('#numPositions').val()
 					+ '&CourseYear=' + $('#courseYear').val()
 					+ '&Add=True&Courses';
+		displayPageInfo(addString);
 	}else{
 		if(!($("#userPassword").val() == $("#retypePassword").val())){
 			$("#errorMessage").text('Your passwords do not match!');
@@ -278,17 +297,17 @@ function addItem(item){
 						+ '&UserPassword=' + $('#userPassword').val()
 						+ '&Add=True&Users';
 		}
-	}
-	if(confirm("Are you sure you wish to add this entry?")){
-		$("#errorMessage").text("");
-		displayPageInfo(addString);
+		if(confirm("Are you sure you wish to add this entry?")){
+			$("#errorMessage").text("");
+			displayPageInfo(addString);
+		}
 	}
 }
 
 /* Simply sends which instructor needs to be updated */
 function changeCourseIns(){
 	if(selectedRow == null){
-		alert("There's no course selected!");
+		$("#errorMessage").text("There's no course selected!");
 	}
 	else{
 		getCourseRowInfo();
@@ -303,11 +322,11 @@ function changeCourseIns(){
 	}
 }
 
-/* Function as of right now just asks if user is she they wish to 
-   submit an application for the selected course */ 
+/* Function asks user specific questions to the course, then submits an 
+   application to this course. */ 
 function courseApply(){
 	if(selectedRow == null){
-		alert("There's no course selected!");
+		$("errorMessage").text("There's no course selected!");
 	}
 	else{
 		getCourseRowInfo();
@@ -320,7 +339,7 @@ function courseApply(){
 	} 
 }
 
-/* Takes Application form data and submits it */
+/* Takes filled out application form data and submits it */
 function submitApplication(){
 	if(confirm('Are you sure you wish to submit this application?')){
 		applyString = 'NumCourses="'+ $("#numCourses").val() +'"&TaBefore="' 
@@ -331,14 +350,39 @@ function submitApplication(){
 	}
 }
 
+/*  Retrieves all info of the selected row in the Oppourtunities  table */
+function getCourseRowInfo(){
+	rowId = '', rowCourse = '', rowTerm = '', rowInstructor = '';
+	var i=0;
+	selectedRow.find('td').each(function(){
+		switch(i){
+    		case 0:
+        		rowId += $(this).text();
+        		break;
+    		case 1:
+        		rowCourse += $(this).text();
+        		break;
+        	case 3:
+        		rowTerm += $(this).text();
+        		break;
+        	case 5:
+        		rowInstructor += $(this).text();
+        		break;
+		}
+		i++;
+	});
+}
 
-/* Function displays a profile of a given person on the page */
+/* ======================= Profile Page Functions ========================== */
+
+/* Function displays a profile of a given person on the page, may be
+   viewed by clicking a link (ADMIN) or clicking "My Profile" */
 function getProfile(person){
 	profileString = 'GetProfile=True&ProfileId='; 
 	if(person == 'MyProfile'){
 		profileString += $('#loggedInUser').text().substr(14,30);
 	}
-	if(person == 'Instructor'){
+	else if(person == 'Instructor'){
 		var i=0;
 		selectedRow.find('td').each(function(){
 			if(i==0){
@@ -348,10 +392,15 @@ function getProfile(person){
 			i++;
 		});
 	}
+	else{
+		profileString += person;
+	}
 	profileString += '&Profiles';
 	displayPageInfo(profileString);
 }
 
+/* Allows applicant only to edit the current information on their saved
+   profile viewable only by ADMINS */
 function editProfile(){
 	year='', choice1='', choice2='', choice3='', choice4 = '';
 	choice5 = '', taExp = '', taVol = '', taWhy = '';
@@ -389,20 +438,19 @@ function editProfile(){
 		}
 		i++;
 	});
-	
 	profileString += $('#loggedInUser').text().substr(14,30) +
 						'&EditProfile=True&Profiles';
-
 	var getInfo = displayPageInfo(profileString);
 	}
 
+/* After empty edit profile page is returned, fill with applicant's saved info */
 function placeValues(){
 	$("#pYear").val(year), $("#course1").val(choice1), $("#course2").val(choice2);
 	$("#course3").val(choice3), $("#course4").val(choice4), $("#course5").val(choice5);
 	$("#pTAExp").val(taExp), $("#pTAVol").val(taVol), $("#pTAWhy").val(taWhy);
-	
 }
 
+/* Submits the profile information was applicant is finished editing and save it */
 function updateProfile(){
 	profileString = 'UpdateProfile=True' +  '&Year=' + $("#pYear").val() +
 			'&TaExp=' + $("#pTAExp").val() + '&TaVol=' + $("#pTAVol").val() +
@@ -411,18 +459,16 @@ function updateProfile(){
 			'&Choice4=' + $("#course4").val() + '&Choice5=' + $("#course5").val() +
 			"&Profiles";
 	displayPageInfo(profileString);
-	
 	setTimeout(function() {
     	getProfile('MyProfile');
   	}, 100);
-	
 }
 
+/* Function switches tag values when selects are changed, to force applicant to
+   distinguish between their 5 top choices and cannot be left blank */
 function checkValues(id,prevValue,newValue){
-	
 	var idid= '#' + id;
 	var courseList = ['#course1','#course2','#course3','#course4','#course5'];
-
 	if(id=='course1'||id=='course2'||id=='course3'||id=='course4'||id=='course5'){
 		for(courses in courseList){
 			if(($(courseList[courses]).val() == newValue) && !(idid == courseList[courses])){
@@ -431,9 +477,12 @@ function checkValues(id,prevValue,newValue){
 			}
 		}
 	}
-	
 }
 
+/* ======================= Application Page Functions ========================== */
+
+/* After applications page is displayed, this function updates the values of
+   the statuses, also colour coordinating them */
 function updateTags() {
 	var i = 0;
 	$("#allAppTable").find('.selectTd').each(function(){
@@ -443,13 +492,10 @@ function updateTags() {
 						 '<option value="Yes">Granted</option>' +
 						 '<option value="Maybe">Maybe</option>' +
 						 '<option value="No">No</option></select>';
-
-		//console.log('"' + $(this).text()+'"');
 		tagValue = $(this).text();
 		$(this).html(selectTag);
 		var idid = '#' + tagId;
 		$(idid).val(tagValue);
-
 		switch($(idid).val()){
 			case 'No':
 				$(idid).css("background-color","red");
@@ -468,6 +514,8 @@ function updateTags() {
 	});
 }
 
+/* When the status of an application is changed, information is stored
+   and sent to databse for storage, and update course table */
 function changeTag(newTag, oldTag){
 	tagUtorid = '', tagCourse = '';
 	tagTerm = '', tagYear = '';
@@ -494,49 +542,7 @@ function changeTag(newTag, oldTag){
 				'"&TagValue="' + newTag + '"&OldTag="' + oldTag +
 				'"&TagTerm="' + tagTerm +'"&TagYear="' + tagYear +
 				'"&ChangeTag';
-	//console.log(changeString);
 	displayPageInfo(changeString);
-
-}
-
-
-/*  Retrieves all info of the selected row in the Oppourtunities  table */
-function getCourseRowInfo(){
-	rowId = '', rowCourse = '', rowTitle = '', rowTerm = '', rowYear = '';
-	rowInstructor = '', rowCampus = '', rowPos = '', rowAvail = '';
-	var i=0;
-	selectedRow.find('td').each(function(){
-		switch(i){
-    		case 0:
-        		rowId += $(this).text();
-        		break;
-    		case 1:
-        		rowCourse += $(this).text();
-        		break;
-        	case 2:
-        		rowTitle += $(this).text();
-        		break;	
-        	case 3:
-        		rowTerm += $(this).text();
-        		break;
-        	case 4:
-        		rowYear += $(this).text();
-        		break;
-        	case 5:
-        		rowInstructor += $(this).text();
-        		break;
-        	case 6:
-        		rowCampus += $(this).text();
-        		break;
-        	case 7:
-        		rowPos += $(this).text();
-        		break;
-        	case 8:
-        		rowAvail += $(this).text();
-        		break;
-		}
-		i++;
-	});
 }
 
 
