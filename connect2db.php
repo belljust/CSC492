@@ -56,20 +56,26 @@
 			if ($_SESSION['role'] == "ADMIN"){
 				/* HTML for page buttons for admins. Displayed when $_SESSION['User'] == 'ADMIN' */
 				$adminPages = '<center><table id="admButtons"><tr><td>'.
-					'<button type="button" id="coursePage" onclick="displayPageInfo(' . "'Courses'" .')">Courses</button>'.
+					'<button type="button" id="coursePage" onclick="displayPageInfo(' . "'Courses'".
+					');selectedRow=null;">Courses</button>'.
 					'</td><td><button id="usersPage" onclick="displayPageInfo(' . "'Users'" .
-					')">Users</button></td>'.
-					'</td><td><button id="appPage" onclick="displayPageInfo(' . "'All_Applications'" .')">All Applications</button></td>'.
-					'<td><button id="statsPage" onclick="displayStats()">Stats</button></td>'.
+					');selectedRow=null;">Users</button></td>'.
+					'</td><td><button id="appPage" onclick="displayPageInfo(' . "'All_Applications'" .
+					'); selectedRow=null;">All Applications</button></td>'.
+					'<td><button id="otherPage" onclick="displayPageInfo(' . "'OtherPage'" .
+					')">Other</button></td>'.
 					'<td id="loggedInUser">Logged in as: '. $_SESSION['user'].'</td></tr></table></center><br>';
 				echo $adminPages;
 			}
 			elseif ($_SESSION['role'] == "INSTRUCTOR"){
 				/* HTML for page buttons for instructors. Displayed when $_SESSION['User'] == 'INSTRUCTOR' */
 				$instructorPages = '<center><table id="instButtons"><tr><td>'.
-					'<button type="button" id="coursePage" onclick="displayPageInfo(' . "'Courses'" .')">Courses</button>'.
-					'<td><button id="usersPage" onclick="displayPageInfo(' . "'Users'" .')">Users</button></td>'.
-					'</td><td><button id="appPage" onclick="displayPageInfo(' . "'All_Applications'" .')">All Applications</button></td>'.
+					'<button type="button" id="coursePage" onclick="displayPageInfo(' . "'Courses'" .
+					');selectedRow=null;">Courses</button>'.
+					'<td><button id="usersPage" onclick="displayPageInfo(' . "'Users'" .
+					');selectedRow=null;">Users</button></td>'.
+					'</td><td><button id="appPage" onclick="displayPageInfo(' . "'All_Applications'" .
+					');selectedRow=null;">All Applications</button></td>'.
 					'<td id="loggedInUser">Logged in as: '. $_SESSION['user'].'</td></tr></table></center><br>';
 				echo $instructorPages;
 			}

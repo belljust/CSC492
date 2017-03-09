@@ -19,10 +19,31 @@ selectedRow = null;
 $(document).on("click", "#courseTable tbody tr",function() {
 	if (selectedRow != null){
 		selectedRow.css("background-color", "#aeccfc");
+		var i=0;
+		selectedRow.find('td').each(function(){
+			switch(i){
+	        	case 2:
+	        		$(this).text(rowTitle.replace('** '| ' **', ''));
+	        		break;
+			}
+			i++;
+		});
 	} 
 	$(this).css("background-color", "#ff8533");
+	var i=0;
+	$(this).find('td').each(function(){
+		switch(i){
+        	case 2:
+        		rowTitle = $(this).text();
+        		$(this).text('** ' + rowTitle + ' **');
+        		break;
+        	case 5:
+        		rowInstructor = $(this).text();
+        		break;
+		}
+		i++;
+	});
 	selectedRow = $(this);
-	getCourseRowInfo();
 	$("#changeInstructor").val(rowInstructor);
 });
 
@@ -35,12 +56,32 @@ $(document).on("submit", "#addCourseForm",function(page) {
 /* ====================== Users Page =========================== */
 
 /* When selecting a row from the table of users */
+userUtorid = '';
 $(document).on("click", "#userTable tbody tr",function() {
 	if (selectedRow != null){
 		selectedRow.css("background-color", "#aeccfc");
+		var i=0;
+		selectedRow.find('td').each(function(){
+			switch(i){
+	        	case 0:
+	        		$(this).text(userUtorid.replace('** '|' **', ''));
+	        		break;
+			}
+			i++;
+		});
 	} 
 	$(this).css("background-color", "#ff8533");
 	selectedRow = $(this);
+	var i=0;
+	selectedRow.find('td').each(function(){
+		switch(i){
+        	case 0:
+        		userUtorid = $(this).text()
+        		$(this).text('** ' + userUtorid + ' **');
+        		break;
+		}
+		i++;
+	});
 });
 
 /* When adding a new User */
@@ -97,19 +138,43 @@ $(document).on("change", "#myProfileTable select",function() {
 });
 
 
-/* ==================== Student Course Page ==================== */
+/* ================== Applicant Course Page ==================== */
 
+/* When applicant applies to a course */
 $(document).on("click","#apply",function(page){
 	page.preventDefault();
 	courseApply();
 });
 
+/* When applicant submits their application */
 $(document).on("submit", "#applyForm",function(page) {
 	page.preventDefault();
 	submitApplication();
 });
 
+/* ===================== ADMIN Other Page ====================== */
 
+/* When Clear semeter is pressed */
+$(document).on("click","#clearSemester",function(page){
+	if(confirm("Are you absolutely sure you would like to completely" +
+		" erase ALL the current courses and applications?")){
+		displayPageInfo('CLEARSEMESTER');
+		displayPageInfo('Courses');
+		setTimeout(function() {
+    		$("#errorMessage").text('Your semester was successfully cleared.');
+  		}, 100);
+	}
+});
+
+/* When Upload CSV is pressed */
+$(document).on("submit","#csvForm",function(page){
+	page.preventDefault();
+	var formData = new FormData($(this)[0]);
+	console.log($("#file-input").val());
+	console.log(formData);
+	//console.log($(this)[0]);
+	uploadCourses($("#file-input").val());
+});
 /* ================== Login/ Logout Features =================== */
 
 /* When login form is submitted*/
@@ -125,8 +190,6 @@ $(document).on("click","#logout",function(){
 	logout();
 	console.log('logout button just pressed');
 });
-
-
 
 
 
@@ -212,6 +275,8 @@ function displayPageInfo(page){
 			}else{
 				$("#pageInfo").html(response);
 			}
+			$("#errorMessage").text("");
+			console.log(response);
 		},
 		error: function(){
 			$("#pageInfo").html('<p>Error connecting to database</p>');
@@ -232,7 +297,8 @@ function deleteItem(item){
 		var i = 0;
 		selectedRow.find('td').each(function(){
 			if (i==0){
-				deleteString += $(this).text();
+				deleteString += $(this).text().replace('** ','').replace(' **','');
+				console.log($(this).text().replace('** ','').replace(' **',''));
 				i ++;
 			}
 		});
@@ -257,8 +323,24 @@ function addItem(item){
 					+ '&CourseInstructor=' + $('#courseInstructor').val()
 					+ '&CourseCampus=' + $('#courseCampus').val()
 					+ '&TaPositions=' + $('#numPositions').val()
-					+ '&CourseYear=' + $('#courseYear').val()
-					+ '&Add=True&Courses';
+					+ '&CourseYear=' + $('#courseYear').val();
+		if(!($('#question1').val().trim() == '')){
+					addString += '&Question1=' + $('#question1').val();
+		}else{
+					addString += '&Question1=null';
+		}
+		if(!($('#question2').val().trim() == '')){
+					addString += '&Question2=' + $('#question2').val();
+		}else{
+					addString += '&Question2=null';
+		}
+		if(!($('#question3').val().trim() == '')){
+					addString += '&Question3=' + $('#question3').val();
+		}else{
+					addString += '&Question3=null';
+		}
+					
+					addString += '&Add=True&Courses';
 		displayPageInfo(addString);
 	}else{
 		if(!($("#userPassword").val() == $("#retypePassword").val())){
@@ -341,11 +423,20 @@ function courseApply(){
 
 /* Takes filled out application form data and submits it */
 function submitApplication(){
+	applyString = 'Grade="' + $("#grade").val() + '"&RowId="' + rowId + 
+		'"&Late=0';
 	if(confirm('Are you sure you wish to submit this application?')){
-		applyString = 'NumCourses="'+ $("#numCourses").val() +'"&TaBefore="' 
-		+ $("#taBefore").val() + '"&WorkBefore="' + $("#workBefore").val() 
-		+ '"&Grade="' + $("#grade").val() + '"&RowId="' + rowId + 
-		'"&Late=0&ApplySubmit=';
+		if(!($("#answer1").length == 0)){
+			applyString += '&Answer1="'+ $("#answer1").val() + '"';
+		}
+		if(!($("#answer2").length == 0)){
+			applyString += '&Answer2="'+ $("#answer2").val() + '"';
+		}
+		if(!($("#answer3").length == 0)){
+			applyString += '&Answer3="'+ $("#answer3").val() + '"';
+		}
+		
+		applyString += '&ApplySubmit=';
 		displayPageInfo(applyString);
 	}
 }
@@ -353,6 +444,7 @@ function submitApplication(){
 /*  Retrieves all info of the selected row in the Oppourtunities  table */
 function getCourseRowInfo(){
 	rowId = '', rowCourse = '', rowTerm = '', rowInstructor = '';
+	rowTitle = '';
 	var i=0;
 	selectedRow.find('td').each(function(){
 		switch(i){
@@ -361,6 +453,9 @@ function getCourseRowInfo(){
         		break;
     		case 1:
         		rowCourse += $(this).text();
+        		break;
+        	case 2:
+        		rowTitle += $(this).text();
         		break;
         	case 3:
         		rowTerm += $(this).text();
@@ -372,6 +467,30 @@ function getCourseRowInfo(){
 		i++;
 	});
 }
+
+/* Reads the provided CSV file and adds the coruse to Course table */
+function uploadCourses(file){
+	console.log('before ajax');
+	console.log(file);
+	var postString = 'CSV=' + file;
+    $.ajax({
+        type: "POST",
+        url: "Controller.php",
+        data: postString,
+        cache: false,
+        contentType: false,
+        processData: false,
+        //dataType: "text/csv",
+        success: function(data){
+        	console.log(data);
+        },
+        failure: function(){
+        	$("errorMessage").text('Upload Failed');
+        }
+     });
+     console.log(postString);
+}
+
 
 /* ======================= Profile Page Functions ========================== */
 
@@ -387,7 +506,6 @@ function getProfile(person){
 		selectedRow.find('td').each(function(){
 			if(i==0){
 				profileString += $(this).text();
-				console.log(profileString);
 			}
 			i++;
 		});
@@ -403,38 +521,31 @@ function getProfile(person){
    profile viewable only by ADMINS */
 function editProfile(){
 	year='', choice1='', choice2='', choice3='', choice4 = '';
-	choice5 = '', taExp = '', taVol = '', taWhy = '';
+	choice5 = '', taExp = '', taVol = '', taWhy = '', status = '';
 	var i=0;
 
 	$("#myProfileTable").find('td').each(function(){
 		switch(i){
         	case 3:
-        		choice1 += $(this).text();
-        		break;	
+        		choice1 += $(this).text(); break;	
         	case 5:
-        		choice2 += $(this).text();
-        		break;
+        		choice2 += $(this).text(); break;
         	case 7:
-        		choice3 += $(this).text();
-        		break;
+        		choice3 += $(this).text(); break;
         	case 9:
-        		choice4 += $(this).text();
-        		break;
+        		choice4 += $(this).text(); break;
         	case 11:
-        		choice5 += $(this).text();
-        		break;
-        	case 12:
-        		year += $(this).text().substr(27,50);
-        		break;
+        		choice5 += $(this).text(); break;
         	case 13:
-        		taExp += $(this).text().substr(23,1000);
-        		break;
+        		status += $(this).text(); break;
         	case 14:
-        		taVol += $(this).text().substr(42,1000);
-        		break;
+        		year += $(this).text().substr(27,50); break;
         	case 15:
-        		taWhy += $(this).text().substr(29,1000);
-        		break;
+        		taExp += $(this).text().substr(23,1000); break;
+        	case 16:
+        		taVol += $(this).text().substr(42,1000); break;
+        	case 17:
+        		taWhy += $(this).text().substr(29,1000); break;
 		}
 		i++;
 	});
@@ -448,6 +559,7 @@ function placeValues(){
 	$("#pYear").val(year), $("#course1").val(choice1), $("#course2").val(choice2);
 	$("#course3").val(choice3), $("#course4").val(choice4), $("#course5").val(choice5);
 	$("#pTAExp").val(taExp), $("#pTAVol").val(taVol), $("#pTAWhy").val(taWhy);
+	$("#studentStatus").val(status);
 }
 
 /* Submits the profile information was applicant is finished editing and save it */
@@ -457,8 +569,9 @@ function updateProfile(){
 			'&TaWhy=' + $("#pTAWhy").val() + '&Choice1=' + $("#course1").val() + 
 			'&Choice2=' + $("#course2").val() + '&Choice3=' + $("#course3").val() +
 			'&Choice4=' + $("#course4").val() + '&Choice5=' + $("#course5").val() +
-			"&Profiles";
+			'&Status=' + $("#studentStatus").val() + "&Profiles";
 	displayPageInfo(profileString);
+	console.log(profileString);
 	setTimeout(function() {
     	getProfile('MyProfile');
   	}, 100);

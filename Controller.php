@@ -42,7 +42,8 @@
 			$query = 'INSERT INTO COURSE VALUES('.($row[0] + 1).',"'.htmlspecialchars($_POST['CourseCode']).
 					'","'.htmlspecialchars($_POST['CourseTitle']).'","'.$_POST['CourseTerm'].'","'.
 					$_POST['CourseYear'].'","'.$_POST['CourseInstructor'].'","'.$_POST['CourseCampus'].'","'.
-					$_POST['TaPositions'].'","'.$_POST['TaPositions'].'");';
+					$_POST['TaPositions'].'","'.$_POST['TaPositions'].'","'.htmlspecialchars($_POST['Question1']).'"
+					,"'.htmlspecialchars($_POST['Question2']).'","'.htmlspecialchars($_POST['Question3']).'");';
 			mysqli_query($dbconnect, $query);
 			
 		}
@@ -60,13 +61,20 @@
 		/* Populate the Course table, row by row */
 		$result = mysqli_query($dbconnect, $query);
 		$returnString = '<div id="tableWrap"><table id="courseTable"><thead><tr>'.
-						'<th align="center" colspan="9">OPPORTUNITIES</th></tr><tr><td>ID</td>'.
+						'<th align="center" colspan="9">OPPORTUNITIES</th></tr><tr>'.
 						'<td>Code</td><td>Title</td><td>Term</td><td>Year</td><td>Instructor</td>'.
 						'<td>Campus</td><td>Num Positions</td><td>Available</td></tr></thead><tbody>';
 		while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
 			$returnString .= '<tr>';
 			for($i=0; $i <=8; $i++){
-				$returnString .= '<td>'.$row[$i].'</td>';
+				if($i==0){
+					$returnString .= '<td style="display: none;">'.$row[$i].'</td>';
+				}
+				elseif($i == 2){
+					$returnString .= '<td id="rowTitle">'.$row[$i].'</td>';
+				}else{
+					$returnString .= '<td>'.$row[$i].'</td>';
+				}
 			}
 			$returnString .= '</tr>';
 		}
@@ -125,8 +133,14 @@
 							 '<option value="S">Summer</option></select></td>'.
 							 '<td> Instructor:</td><td>'.$instStringHead.'</td><td> Campus:</td><td>'.
 							 $Campuses.'</td></tr><tr><td>TA Positions: </td><td>'.$Positions.'</td>'.
-							 '<td>Year: </td><td>'.$years.'</td></tr></table>'.
-							 '<input type="submit" id="addCourse" value="Add course"></form>';
+							 '<td>Year: </td><td>'.$years.'</td></tr>'.
+							 '<tr><td> Question 1:</td>'.
+							 '<td colspan="5"><input type="text" name="Question1" id="question1" size="63">'.
+							 '</td></tr><tr><td> Question 2:</td>'.
+							 '<td colspan="5"><input type="text" name="Question2" id="question2" size="63">'.
+							 '</td></tr><tr><td> Question 3:</td>'.
+							 '<td colspan="5"><input type="text" name="Question3" id="question3" size="63">'.
+							 '</td></tr></table><input type="submit" id="addCourse" value="Add course"></form>';
 		}
 		elseif($_SESSION['role'] == 'APPLICANT'){
 			$returnString.= '<center><button id="apply">Apply For Selected Course</botton></center>';
@@ -137,21 +151,30 @@
 
 	/* The HTML for the application form to be filled out. */
 	if(isset($_POST['ApplyRequest'])){
+		$query = 'SELECT Question_1,Question_2,Question_3 FROM COURSE WHERE CODE='.$_POST['RowCourse'].';';
+		$result = mysqli_query($dbconnect, $query);
+		$row =  mysqli_fetch_array($result, MYSQLI_NUM);
 		$returnString = '<center><form id="applyForm"><table id="applyTable"><tr><th align="center" colspan="2">'.
-						'Application for '.trim($_POST["RowCourse"],'"').' ('.trim($_POST["RowTerm"],'"').') with Prof.'.
-						'</th></tr><tr><td> Number of courses taken with this Instructor?: </td>'.
-						'<td><select id="numCourses"><option value=0>0</option><option value=1>1</option>'.
-						'<option value=2>2</option><option value=3>3</option><option value=4>4</option>'.
-						'<option value="5+">5 or more</option></td></tr>'.
-						'<tr><td> Have you TA'."'".'d this course before?: </td>'.
-						'<td><select id="taBefore"><option value="yes">YES</option><option value="no">NO</option>'.
-						'<tr><td> Have you worked for this Prof before?: </td>'.
-						'<td><select id="workBefore"><option value="yes">YES</option><option value="no">NO</option>'.
-						'<tr><td> Grade you received in this course? (0-100): </td>'.
-						'<td><input type="text" name="grade" id="grade" maxlength="3" size="4" placeholder="65">'.
-						'</td></tr><tr><td><input type="submit" id="applySubmit" value="Submit Application">'.
-						'</td></tr></table></form></center>';
-		echo $returnString;
+				'Application for '.trim($_POST["RowCourse"],'"').' ('.trim($_POST["RowTerm"],'"').') with Prof.'.
+				'</th></tr>';
+				if(!($row[0] == 'null')){
+					$returnString .= '<tr><td>'.$row[0].'</td></tr>'.
+					'<tr><td><textarea id="answer1" cols="40" rows="4"></textarea></td></tr>';
+				}
+				if(!($row[1] == 'null')){
+					$returnString .= '<tr><td>'.$row[1].'</td></tr>'.
+				'<tr><td><textarea id="answer2" cols="40" rows="4"></textarea></td></tr>';
+				}
+				if(!($row[2] == 'null')){
+					$returnString .= '<tr><td>'.$row[2].'</td></tr>'.
+				'<tr><td><textarea id="answer3" cols="40" rows="4"></textarea></td></tr>';
+				}
+				
+		$returnString .= '<tr><td> Grade you received in this course? (0-100): </td>'.
+				'<td><input type="text" name="grade" id="grade" maxlength="3" size="4" placeholder="65">'.
+				'</td></tr><tr><td><input type="submit" id="applySubmit" value="Submit Application">'.
+				'</td></tr></table></form></center>';
+		echo $returnString;		
 	}
 
 	/* Adding information from application into appropriate tables. */
@@ -163,16 +186,37 @@
 		$row =  mysqli_fetch_array($result, MYSQLI_NUM);
 		mysqli_free_result($result);
 
+		if(isset($_POST['Answer1'])){
+			$Answer1 = $_POST['Answer1'];
+		}else{
+			$Answer1 = 'null';
+		}
+		if(isset($_POST['Answer2'])){
+			$Answer2 = $_POST['Answer2'];
+		}else{
+			$Answer2 = 'null';
+		}
+		if(isset($_POST['Answer3'])){
+			$Answer3 = $_POST['Answer3'];
+		}else{
+			$Answer3 = 'null';
+		}
 		/* Adding the answers from post into Answers table. */
-		$query = 'INSERT INTO ANSWERS VALUES('.($row[0] + 1).','.$_POST['NumCourses'].','.$_POST['WorkBefore'].
-			   	 ','.$_POST['TaBefore'].','.$_POST['Grade'].');';
+		$query = 'INSERT INTO ANSWERS VALUES('.($row[0] + 1).','.$Answer1.','.$Answer2.
+			   	 ','.$Answer3.','.$_POST['Grade'].');';
 		mysqli_query($dbconnect, $query);
 
 		/* Adding the Application info into applications table. */
 		$query = 'INSERT INTO APPLICATIONS VALUES ("'.$_SESSION['user'].'",'.$_POST['RowId'].',"'.
 				 $_POST['Late'].'","'.($row[0] + 1).'","Pending");';
-		mysqli_query($dbconnect, $query);
-		echo "<br><p>Thanks, Your Application has been submitted!</p>";
+		if(!(mysqli_query($dbconnect, $query))){
+			$query = 'DELETE FROM ANSWERS WHERE AID='.($row[0] + 1).';';
+			mysqli_query($dbconnect, $query);
+			echo "<br><p>You have already submitted an application for this course!</p>";
+		}else{
+			echo "<br><p>Thanks, Your Application has been submitted!</p>";
+		}
+		
 	}
 
 	if(isset($_POST['All_Applications'])) {
@@ -308,6 +352,10 @@
 		if (isset($_POST['Delete'])){
 			$query = 'DELETE FROM Users WHERE UTORID="'.$_POST["ID"].'";';
 			mysqli_query($dbconnect, $query);
+			$query = 'DELETE FROM Profiles WHERE UTORID="'.$_POST["ID"].'";';
+			mysqli_query($dbconnect, $query);
+			$query = 'DELETE FROM Applications WHERE UTORID="'.$_POST["ID"].'";';
+			mysqli_query($dbconnect, $query);
 		}
 
 		if (isset($_POST['Add'])){
@@ -360,7 +408,7 @@
 	if(isset($_POST['Profiles'])){
 		if(isset($_POST['GetProfile'])){
 
-			$query = 'SELECT UTORID,FNAME,LNAME,YEAR_STUDY,CHOICE1,CHOICE2,CHOICE3,CHOICE4,
+			$query = 'SELECT UTORID,FNAME,LNAME,STATUS,YEAR_STUDY,CHOICE1,CHOICE2,CHOICE3,CHOICE4,
 				 CHOICE5,TA_EXP,VOLUNTEER,BLURB FROM (USERS NATURAL JOIN PROFILES) WHERE UTORID="'.
 				 $_POST['ProfileId'].'";';
 			$result = mysqli_query($dbconnect, $query);
@@ -392,27 +440,31 @@
 				$course5 .= '</select>';
 
 				$returnString.= $_SESSION['user']."'s Profile</th></tr>".
-							'<tr><td><b>Year of Study:</b></td><td><select id="pYear"'.
-							'style="width: 75px;"><option value="1">1</option>'.
-							'<option value="2">2</option><option value="3">3</option>'.
-							'<option value="4">4</option><option value="5">5</option>'.
-							'<option value="Grad">Graduate</option><option value="non">Non-Student</option>'.
-							'<td><b>1st Choice:</b></td> <td>'.$course1.'</td>'.
-							'<td><b>2nd Choice:</b></td><td>'.$course2.'</td></tr>'.
-							'<tr><td><b>3rd Choice:</b></td><td>'.$course3.'</td>'.
-							'<td><b>4th Choice:</b></td><td>'.$course4.'</td>'.
-							'<td><b>5th Choice:</b></td><td>'.$course5.'</td></tr>'.
-							'<tr><center><th colspan="6">My Past TA Experience</center><th></tr>'.
-							'<tr><td colspan="6"><textarea id="pTAExp" style="width: 100%;" '.
-							'cols="25" rows="4"></textarea></td></tr>'.
-							'<tr><center><th colspan="6">My Extracurricular/Volunteer Activites</center><th></tr>'.
-							'<tr><td colspan="6"><textarea id="pTAVol" style="width: 100%;" '.
-							'cols="25" rows="4"></textarea></td></tr>'.
-							'<tr><center><th colspan="6">Why I'."'".'d Make a Good TA?</center><th></tr>'.
-							'<tr><td colspan="6"><textarea id="pTAWhy" style="width: 100%;" '.
-							'cols="25" rows="4"></textarea></td></tr><tr><td>'.
-							'<input type="submit" id="submitPro" value="Update Profile"></td></tr></table></form>'.
-							'placeValues()';
+					'<tr><td><b>Student Status:</b><td><select id="studentStatus">'.
+					'<option value="Undergrad">Undergrad</option>'.
+					'<option value="Graduate">Graduate</option>'.
+					'<option value="Non-Student">Non-Student</option></select></td>'.
+					'<td><b>Year of Study:</b></td><td><select id="pYear"'.
+					'style="width: 75px;"><option value="1">1</option>'.
+					'<option value="2">2</option><option value="3">3</option>'.
+					'<option value="4">4</option><option value="5">5</option>'.
+					'<option value="6">6</option><option value="7">7</option></select></tr>'.
+					'<tr><td><b>1st Choice:</b></td> <td>'.$course1.'</td>'.
+					'<td><b>2nd Choice:</b></td><td>'.$course2.'</td>'.
+					'<td><b>3rd Choice:</b></td><td>'.$course3.'</td></tr>'.
+					'<tr><td><b>4th Choice:</b></td><td>'.$course4.'</td>'.
+					'<td><b>5th Choice:</b></td><td>'.$course5.'</td></tr>'.
+					'<tr><center><th colspan="6">My Past TA Experience</center><th></tr>'.
+					'<tr><td colspan="6"><textarea id="pTAExp" style="width: 100%;" '.
+					'cols="25" rows="4"></textarea></td></tr>'.
+					'<tr><center><th colspan="6">My Extracurricular/Volunteer Activites</center><th></tr>'.
+					'<tr><td colspan="6"><textarea id="pTAVol" style="width: 100%;" '.
+					'cols="25" rows="4"></textarea></td></tr>'.
+					'<tr><center><th colspan="6">Why I'."'".'d Make a Good TA?</center><th></tr>'.
+					'<tr><td colspan="6"><textarea id="pTAWhy" style="width: 100%;" '.
+					'cols="25" rows="4"></textarea></td></tr><tr><td>'.
+					'<input type="submit" id="submitPro" value="Update Profile"></td></tr></table></form>'.
+					'placeValues()';
 			}else{
 				/* Return message when profile is empty */
 				if(mysqli_num_rows($result) == 0){
@@ -421,19 +473,20 @@
 					while($row = mysqli_fetch_array($result, MYSQLI_NUM)){
 						$returnString.= $row[0]. "'s Profile</th></tr>".'<tr><td id="fName"><b>First Name:</b>'.
 								$row[1].'</td><td id="lName"><b>Last Name:</b> '.$row[2].'</td></tr>'.
-								'<tr><td><b>First Choice: </b></td><td id="choice1">'.$row[4].'</td>'.
-								'<td><b>Second Choice: </b></td><td id="choice2">'.$row[5].'</td>'.
-								'<td><b>Third Choice:</b></td><td id="choice3">'.$row[6].'</td>'.
-								'<td><b>Fourth Choice: </b></td><td id="choice4">'.$row[7].'</td>'.
-								'<td><b>Fifth Choice: </b></td><td id="choice5">'.$row[8].'</td></tr>'.
-								'<tr><td colspan="6"  id="studyYear"><b>My Current Year of Study: </b> '.
-								$row[3].'</td></tr>'.
+								'<tr><td><b>First Choice: </b></td><td id="choice1">'.$row[5].'</td>'.
+								'<td><b>Second Choice: </b></td><td id="choice2">'.$row[6].'</td>'.
+								'<td><b>Third Choice:</b></td><td id="choice3">'.$row[7].'</td>'.
+								'<td><b>Fourth Choice: </b></td><td id="choice4">'.$row[8].'</td>'.
+								'<td><b>Fifth Choice: </b></td><td id="choice5">'.$row[9].'</td></tr>'.
+								'<tr><td id="pStatus"><b>Student Status:</b></td><td>'.$row[3].'</td>'.
+								'<td colspan="6" id="studyYear"><b>My Current Year of Study: </b> '.
+								$row[4].'</td></tr>'.
 								'<tr><td colspan="6"  id="taExp"><b>My Past TA Experience: </b><p>'.
-								$row[9].'</p></td></tr>'.
+								$row[10].'</p></td></tr>'.
 					 			'<tr><td colspan="6"  id="taVol"><b>My Extracurricular/ Volunteer Activities:'.
-					 			' </b><p>'.$row[10].'</p></td></tr>'.
+					 			' </b><p>'.$row[11].'</p></td></tr>'.
 								'<tr><td colspan="6" id="taWhy"><b>Why Would I Make a Good TA?: </b><p>'.
-								$row[11].'</p></td></tr></table></form>';
+								$row[12].'</p></td></tr></table></form>';
 					}
 				}
 			}
@@ -447,18 +500,47 @@
 		}
 
 		if(isset($_POST['UpdateProfile'])){
-			$query = 'UPDATE PROFILES SET YEAR_STUDY="'.$_POST['Year'].
-					'", CHOICE1="'.$_POST['Choice1']. '", CHOICE2="'.$_POST['Choice2'].
-					'", CHOICE3="'.$_POST['Choice3']. '", CHOICE4="'.$_POST['Choice4'].
-					'", CHOICE5="'.$_POST['Choice5'].
-					'", TA_EXP="'.htmlspecialchars($_POST['TaExp']).
-					'", VOLUNTEER="'.htmlspecialchars($_POST['TaVol']).
-					'", BLURB="'.htmlspecialchars($_POST['TaWhy']).'" WHERE UTORID="'.
-					$_SESSION['user'].'";';
-			mysqli_query($dbconnect, $query);
-			
+			$query = 'SELECT COUNT(*) FROM PROFILES WHERE UTORID="'.$_SESSION['user'].'";';
+			$result = mysqli_query($dbconnect, $query);
+			$row = mysqli_fetch_array($result, MYSQLI_NUM);
+			if($row[0] == 0){
+				$query = 'INSERT INTO PROFILES VALUES(NULL,"'.$_SESSION['user'].'","'.$_POST['Status'].'","'.
+				$_POST['Year'].'","'.$_POST['Choice1'].'","'.$_POST['Choice2'].'","'.$_POST['Choice3'].
+				'","'.$_POST['Choice4'].'","'.$_POST['Choice5'].'","'.htmlspecialchars($_POST['TaExp']).
+				'","'.htmlspecialchars($_POST['TaVol']).'","'.htmlspecialchars($_POST['TaWhy']).'");';
+				mysqli_query($dbconnect, $query);
+			}
+			else{
+				$query = 'UPDATE PROFILES SET STATUS="'
+						.$_POST['Status'].'", YEAR_STUDY="'.$_POST['Year'].
+						'", CHOICE1="'.$_POST['Choice1']. '", CHOICE2="'.$_POST['Choice2'].
+						'", CHOICE3="'.$_POST['Choice3']. '", CHOICE4="'.$_POST['Choice4'].
+						'", CHOICE5="'.$_POST['Choice5'].
+						'", TA_EXP="'.htmlspecialchars($_POST['TaExp']).
+						'", VOLUNTEER="'.htmlspecialchars($_POST['TaVol']).
+						'", BLURB="'.htmlspecialchars($_POST['TaWhy']).'" WHERE UTORID="'.
+						$_SESSION['user'].'";';
+				mysqli_query($dbconnect, $query);
+			}
 		}
-
 	}
-
+	if(isset($_POST['OtherPage'])){
+		$returnString = '<button id="clearSemester">Clear Semester</button><br>'.
+						'<table id="csvTable"><form id="csvForm"><th>Upload a course CSV file</th>'.
+						'<tr><td><input id="file-input" type="file" name="name"/></td</tr>'.
+						'<tr><td><input type="submit" value="Upload Courses"></td></tr></form></table>';
+		echo $returnString;
+	}
+	if(isset($_POST['CLEARSEMESTER'])){
+		$query = 'DELETE FROM ANSWERS;';
+		mysqli_query($dbconnect, $query);
+		$query = 'DELETE FROM APPLICATIONS;';
+		mysqli_query($dbconnect, $query);
+		$query = 'DELETE FROM COURSE;';
+		mysqli_query($dbconnect, $query);
+	}
+	if(isset($_POST['CSV'])){
+		echo $_POST['CSV'];
+		
+	}
 ?>
