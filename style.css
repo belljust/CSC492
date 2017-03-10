@@ -13,8 +13,34 @@ th{
 	border-bottom: 2px solid black;
 }
 
+/* Login page */
+#loginTable{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 30px;
+	padding: 8px;
+	width: 200px;
+	margin: auto;
+}
+
+#login{
+	text-align: center; 
+}
+
+
+/* Users page */
+#addUserForm{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 30px;
+	padding: 8px;
+	width: 500px;
+	margin: auto;
+}
+
+
 #loggedInUser{
-	color: red;
+	color: #FF1717; /* Login Red */
 	position: fixed;
 	right: 30px;
 	bottom: 10px;
@@ -29,16 +55,15 @@ th{
 	position: relative;
 	top: 0;
 	width: 100%;
-	background-color: #5e8cd6;
+	background-color: #5e8cd6;	/* Medium Blue */
 	border-bottom: 4px solid black;
 }
 
 body{
-	color: blue;
+	color: #0202DF; /* Body Blue */
 }
 
 #courseTable, #allAppTable, #userTable{
-
 	border: 2px solid black;
 	text-align: left;
 	border-spacing: 0px;
@@ -49,7 +74,7 @@ body{
 }
 
 #courseTable tbody tr:hover{
-	background-color: #ffff80; 
+	background-color: #ffff80; /* Hover Yellow */
 }
 #userTable tbody tr:hover{
 	background-color: #ffff80; 
@@ -63,7 +88,7 @@ body{
 }
 
 #selected{
-	background-color: #ff8533;
+	background-color: #ff8533;	/* Selected Orange */
 }
 
 input {
@@ -89,7 +114,7 @@ input {
 }
 
 #tableWrap{
-	background-color: #aeccfc;
+	background-color: #aeccfc;	/* Light Blue */
 	position: relative;
 	max-height: 50%;
 	max-width: 65%;
