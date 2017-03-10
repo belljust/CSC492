@@ -44,6 +44,7 @@
 					$_POST['CourseYear'].'","'.$_POST['CourseInstructor'].'","'.$_POST['CourseCampus'].'","'.
 					$_POST['TaPositions'].'","'.$_POST['TaPositions'].'","'.htmlspecialchars($_POST['Question1']).'"
 					,"'.htmlspecialchars($_POST['Question2']).'","'.htmlspecialchars($_POST['Question3']).'");';
+			echo $query;
 			mysqli_query($dbconnect, $query);
 			
 		}
@@ -157,19 +158,19 @@
 		$returnString = '<center><form id="applyForm"><table id="applyTable"><tr><th align="center" colspan="2">'.
 				'Application for '.trim($_POST["RowCourse"],'"').' ('.trim($_POST["RowTerm"],'"').') with Prof.'.
 				'</th></tr>';
-				if(!($row[0] == 'null')){
+				if(!(strlen($row[0])==1)){
 					$returnString .= '<tr><td>'.$row[0].'</td></tr>'.
 					'<tr><td><textarea id="answer1" cols="40" rows="4"></textarea></td></tr>';
 				}
-				if(!($row[1] == 'null')){
+				if(!(strlen($row[1])==1)){
 					$returnString .= '<tr><td>'.$row[1].'</td></tr>'.
 				'<tr><td><textarea id="answer2" cols="40" rows="4"></textarea></td></tr>';
 				}
-				if(!($row[2] == 'null')){
+				if(!(strlen($row[2])==1)){
+					echo 'yo: ',$row[2],strlen($row[2]);
 					$returnString .= '<tr><td>'.$row[2].'</td></tr>'.
-				'<tr><td><textarea id="answer3" cols="40" rows="4"></textarea></td></tr>';
+					'<tr><td><textarea id="answer3" cols="40" rows="4"></textarea></td></tr>';
 				}
-				
 		$returnString .= '<tr><td> Grade you received in this course? (0-100): </td>'.
 				'<td><input type="text" name="grade" id="grade" maxlength="3" size="4" placeholder="65">'.
 				'</td></tr><tr><td><input type="submit" id="applySubmit" value="Submit Application">'.
@@ -297,7 +298,8 @@
 			$returnString .= '<tr>';
 			for($i=0; $i<=6; $i++){
 				if($i==0){
-					$returnString .= '<td onclick="getProfile('."'".$row[$i]."')".'">'.
+					$returnString .= '<td onclick="getProfile('."'".$row[$i]."')".'"'.
+								' id="student">'.
 									 $row[$i].'</td>';
 				}
 				elseif($i<6){
@@ -359,9 +361,10 @@
 		}
 
 		if (isset($_POST['Add'])){
-			$query = 'INSERT INTO Users (UTORID,FNAME,LNAME,ROLE,Password) VALUES("'.
+			$query = 'INSERT INTO Users (UTORID,FNAME,LNAME,ROLE,EMAIL,Password) VALUES("'.
 					$_POST["UserUtorid"].'","'.$_POST["UserFname"].'","'.$_POST["UserLname"].
-					'","'.$_POST["UserRole"].'","'.md5($_POST["UserPassword"]).'");';
+					'","'.$_POST["UserRole"].'","'.$_POST["UserEmail"].'","'.
+					md5($_POST["UserPassword"]).'");';
 			mysqli_query($dbconnect, $query);
 		}
 
@@ -370,13 +373,19 @@
 
 		$result = mysqli_query($dbconnect, $query);
 		$returnString = '<div id="tableWrap"><table id="userTable">'.
-						'<thead><th align="center" colspan="6">CURRENT USERS</th>'.
+						'<thead><th align="center" colspan="5">CURRENT USERS</th>'.
 						'<tr><td>UTORID</td><td>First Name</td><td>Last Name</td><td>Role</td>'.
-						'</thead><tbody>';
+						'<td>Email Address</td></thead><tbody>';
 		while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
 			$returnString .= '<tr>';
-			for($i=0; $i <=3; $i++){
-				$returnString .= '<td>'.$row[$i].'</td>';
+			for($i=0; $i <=4; $i++){
+				if($i==0 && $row[3]=='APPLICANT'){
+					$returnString .= '<td onclick="getProfile('."'".$row[$i]."')".'"'.
+									' id="applicant">'.
+									 $row[$i].'</td>';
+				}else{
+					$returnString .= '<td>'.$row[$i].'</td>';
+				}
 			}
 			$returnString .= '</tr>';
 		}
@@ -396,7 +405,9 @@
 						 '<input type="password" name="userPassword" id="userPassword" size="40">'.
 						 '</td></tr>'.'<tr><td> Retype Pswd:</td><td colspan="3">'.
 						 '<input type="password" name="retypePassword" id="retypePassword" size="40">'.
-						 '</td></tr>'.
+						 '</td></tr>'.'<tr><td>Email Address:</td>'.
+						 '<td><input type="text" name="email" id="email" size="40"'.
+						 ' placeholder="UTOR Email Preferably"></td></tr>'.
 						 '</table><input type="submit" id="addUser" value="Add User"></form><br>';
 		echo $returnString;
 		mysqli_free_result($result);
@@ -409,7 +420,7 @@
 		if(isset($_POST['GetProfile'])){
 
 			$query = 'SELECT UTORID,FNAME,LNAME,STATUS,YEAR_STUDY,CHOICE1,CHOICE2,CHOICE3,CHOICE4,
-				 CHOICE5,TA_EXP,VOLUNTEER,BLURB FROM (USERS NATURAL JOIN PROFILES) WHERE UTORID="'.
+				 CHOICE5,TA_EXP,VOLUNTEER,BLURB,EMAIL FROM (USERS NATURAL JOIN PROFILES) WHERE UTORID="'.
 				 $_POST['ProfileId'].'";';
 			$result = mysqli_query($dbconnect, $query);
 			$returnString = '<form id="editApplication"><table id="myProfileTable"><tr>'.
@@ -462,8 +473,9 @@
 					'cols="25" rows="4"></textarea></td></tr>'.
 					'<tr><center><th colspan="6">Why I'."'".'d Make a Good TA?</center><th></tr>'.
 					'<tr><td colspan="6"><textarea id="pTAWhy" style="width: 100%;" '.
-					'cols="25" rows="4"></textarea></td></tr><tr><td>'.
-					'<input type="submit" id="submitPro" value="Update Profile"></td></tr></table></form>'.
+					'cols="25" rows="4"></textarea></td></tr><tr><td>My email address: </td>'.
+					'<td colspan="5"><input type="text" id="userEmail" style="width: 100%;"></td></tr><tr><td>'.
+					'<input type="submit" id="submitPro" value="Update Profile">'.'</td></tr></table></form>'.
 					'placeValues()';
 			}else{
 				/* Return message when profile is empty */
@@ -481,12 +493,19 @@
 								'<tr><td id="pStatus"><b>Student Status:</b></td><td>'.$row[3].'</td>'.
 								'<td colspan="6" id="studyYear"><b>My Current Year of Study: </b> '.
 								$row[4].'</td></tr>'.
-								'<tr><td colspan="6"  id="taExp"><b>My Past TA Experience: </b><p>'.
-								$row[10].'</p></td></tr>'.
+								'<tr><td colspan="6"  id="taExp"><b>My Past TA Experience: </b><pre>'.
+								$row[10].'</pre></td></tr>'.
 					 			'<tr><td colspan="6"  id="taVol"><b>My Extracurricular/ Volunteer Activities:'.
-					 			' </b><p>'.$row[11].'</p></td></tr>'.
-								'<tr><td colspan="6" id="taWhy"><b>Why Would I Make a Good TA?: </b><p>'.
-								$row[12].'</p></td></tr></table></form>';
+					 			' </b><pre>'.$row[11].'</pre></td></tr>'.
+								'<tr><td colspan="6" id="taWhy"><b>Why Would I Make a Good TA?: </b><pre>'.
+								$row[12].'</pre></td></tr>'.'<tr>';
+						if(!($_SESSION['role'] == "APPLICANT")){
+							$returnString.= '<td>Send Email to '.$row[1].'?</td><td><a href="mailto:'.$row[13].
+										'?Subject=TA%20Application" taget="_blank">'.$row[13].'</a>';
+						}else{
+							$returnString.= '<td>My email address: </td><td>'.$row[13];
+						}
+						$returnString.= '</td></tr></table></form>';
 					}
 				}
 			}
@@ -515,12 +534,17 @@
 						.$_POST['Status'].'", YEAR_STUDY="'.$_POST['Year'].
 						'", CHOICE1="'.$_POST['Choice1']. '", CHOICE2="'.$_POST['Choice2'].
 						'", CHOICE3="'.$_POST['Choice3']. '", CHOICE4="'.$_POST['Choice4'].
-						'", CHOICE5="'.$_POST['Choice5'].
+						'", CHOICE5="'.$_POST['Choice5']. 
 						'", TA_EXP="'.htmlspecialchars($_POST['TaExp']).
 						'", VOLUNTEER="'.htmlspecialchars($_POST['TaVol']).
 						'", BLURB="'.htmlspecialchars($_POST['TaWhy']).'" WHERE UTORID="'.
 						$_SESSION['user'].'";';
 				mysqli_query($dbconnect, $query);
+				
+				$query2 = 'UPDATE USERS SET EMAIL="'.$_POST['Email'].'" WHERE UTORID="'.
+						$_SESSION['user'].'";';
+				mysqli_query($dbconnect, $query2);
+				echo $query2;
 			}
 		}
 	}
@@ -528,7 +552,7 @@
 		$returnString = '<button id="clearSemester">Clear Semester</button><br>'.
 						'<table id="csvTable"><form id="csvForm"><th>Upload a course CSV file</th>'.
 						'<tr><td><input id="file-input" type="file" name="name"/></td</tr>'.
-						'<tr><td><input type="submit" value="Upload Courses"></td></tr></form></table>';
+						'<tr><td><button id="uploadButton">Upload Courses</button></td></tr></form></table>';
 		echo $returnString;
 	}
 	if(isset($_POST['CLEARSEMESTER'])){
@@ -540,7 +564,6 @@
 		mysqli_query($dbconnect, $query);
 	}
 	if(isset($_POST['CSV'])){
-		echo $_POST['CSV'];
-		
+		$query = 'DELETE FROM ANSWERS;';
 	}
 ?>

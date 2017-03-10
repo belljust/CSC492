@@ -17,7 +17,7 @@
     <div id="banner">
       <table id="bannerTable">
         <tr>
-          <td><img src="Pictures/UofTLogo.png" id="UofTLogo"></td>
+          <td><img src="Pictures/UofTLogo2.png" id="UofTLogo"></td>
           <td><h1> TA Application System </h1></td>
           <td><button type="button" id="logout"> Logout </button></td>
         </tr>

@@ -102,3 +102,7 @@ select #green{
 #errorMessage{
 	color: red;
 }
+
+#applicant:hover{
+	color: green;
+}

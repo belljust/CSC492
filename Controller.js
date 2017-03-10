@@ -167,14 +167,25 @@ $(document).on("click","#clearSemester",function(page){
 });
 
 /* When Upload CSV is pressed */
-$(document).on("submit","#csvForm",function(page){
-	page.preventDefault();
-	var formData = new FormData($(this)[0]);
-	console.log($("#file-input").val());
-	console.log(formData);
-	//console.log($(this)[0]);
-	uploadCourses($("#file-input").val());
+$(document).on("click","#uploadButton",function(page){
+	
+	if (window.File && window.FileReader && window.FileList && window.Blob) {
+	  // Great success! All the File APIs are supported.
+	} else {
+	  console.log('The File APIs are not fully supported in this browser.');
+	}
+	var fileInput = document.getElementById('file-input');
+	var file = fileInput.files[0];
+	var reader = new FileReader();
+	reader.onload = function(e) {
+		var readText = reader.result;
+		uploadCourses(readText);
+	}
+	reader.readAsText(file);
+	console.log('test');
+	//page.preventDefault();
 });
+
 /* ================== Login/ Logout Features =================== */
 
 /* When login form is submitted*/
@@ -377,6 +388,7 @@ function addItem(item){
 						+ '&UserFname=' + $('#userFname').val()
 						+ '&UserLname=' + $('#userLname').val()
 						+ '&UserPassword=' + $('#userPassword').val()
+						+ '&UserEmail=' + $('#email').val()
 						+ '&Add=True&Users';
 		}
 		if(confirm("Are you sure you wish to add this entry?")){
@@ -470,25 +482,38 @@ function getCourseRowInfo(){
 
 /* Reads the provided CSV file and adds the coruse to Course table */
 function uploadCourses(file){
-	console.log('before ajax');
-	console.log(file);
-	var postString = 'CSV=' + file;
-    $.ajax({
-        type: "POST",
-        url: "Controller.php",
-        data: postString,
-        cache: false,
-        contentType: false,
-        processData: false,
-        //dataType: "text/csv",
-        success: function(data){
-        	console.log(data);
-        },
-        failure: function(){
-        	$("errorMessage").text('Upload Failed');
-        }
-     });
-     console.log(postString);
+	//console.log(file.split("\n"));
+	var rows = file.split("\n");
+	for (i=0; i < rows.length; i++){
+		var row = rows[i].split(",");
+	
+		var postString = 'Courses="True"&Add="True"&CourseCode=' + row[0] + '&CourseTitle=' +
+						row[1] + '&CourseTerm=' + row[2] + '&CourseInstructor='
+						+ row[3] + '&CourseCampus=' + row[4] + '&TaPositions='
+						+ row[5] + '&CourseYear=' + row[6] +'';
+		if(row.length > 7){
+			postString += '&Question1=' + row[7] + '';
+		}
+		if(row.length > 8){
+			postString += '&Question2=' + row[8] + '';
+		}
+		if(row.length > 9){
+			postString += '&Question3=' + row[9] + '';
+		}
+		console.log(postString);
+	    $.ajax({
+	        type: "POST",
+	        url: "Controller.php",
+	        data: postString,
+	        success: function(data){
+	            displayPageInfo('Courses');
+	        },
+	        failure: function(){
+	        	$("errorMessage").text('Upload Failed');
+	        }
+	     });
+     };
+     //console.log(postString);
 }
 
 
@@ -520,7 +545,7 @@ function getProfile(person){
 /* Allows applicant only to edit the current information on their saved
    profile viewable only by ADMINS */
 function editProfile(){
-	year='', choice1='', choice2='', choice3='', choice4 = '';
+	year='', choice1='', choice2='', choice3='', choice4 = '', email='';
 	choice5 = '', taExp = '', taVol = '', taWhy = '', status = '';
 	var i=0;
 
@@ -546,9 +571,12 @@ function editProfile(){
         		taVol += $(this).text().substr(42,1000); break;
         	case 17:
         		taWhy += $(this).text().substr(29,1000); break;
+        	case 19: 
+        		email += $(this).text(); break;
 		}
 		i++;
 	});
+	console.log(email);
 	profileString += $('#loggedInUser').text().substr(14,30) +
 						'&EditProfile=True&Profiles';
 	var getInfo = displayPageInfo(profileString);
@@ -559,7 +587,7 @@ function placeValues(){
 	$("#pYear").val(year), $("#course1").val(choice1), $("#course2").val(choice2);
 	$("#course3").val(choice3), $("#course4").val(choice4), $("#course5").val(choice5);
 	$("#pTAExp").val(taExp), $("#pTAVol").val(taVol), $("#pTAWhy").val(taWhy);
-	$("#studentStatus").val(status);
+	$("#studentStatus").val(status), $("#userEmail").val(email);
 }
 
 /* Submits the profile information was applicant is finished editing and save it */
@@ -569,7 +597,8 @@ function updateProfile(){
 			'&TaWhy=' + $("#pTAWhy").val() + '&Choice1=' + $("#course1").val() + 
 			'&Choice2=' + $("#course2").val() + '&Choice3=' + $("#course3").val() +
 			'&Choice4=' + $("#course4").val() + '&Choice5=' + $("#course5").val() +
-			'&Status=' + $("#studentStatus").val() + "&Profiles";
+			'&Status=' + $("#studentStatus").val() + '&Email=' + $("#userEmail").val() +
+			"&Profiles";
 	displayPageInfo(profileString);
 	console.log(profileString);
 	setTimeout(function() {
