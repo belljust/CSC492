@@ -1,0 +1,177 @@
+/* General */
+
+body{
+	position: relative;
+	height: 100%; 
+	width: 100%;
+	margin: 0;
+}
+
+h1{
+	color: black;
+}
+th{
+	color: black;
+	border-bottom: 2px solid black;
+}
+
+body{
+	color: #0202DF; /* Body Blue */
+}
+
+/* Banner */
+
+#UofTLogo{
+	height: 80px;
+	width: 240px;
+}
+
+#bannerTable{
+	position: relative;
+	top: 0;
+	width: 100%;
+	background-color: #5e8cd6;	/* Medium Blue */
+	border-bottom: 4px solid black;
+}
+
+/* Login Page */
+#loginTable{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 10px;
+	padding: 8px;
+	width: 200px;
+	margin: auto;
+}
+
+#login{
+	text-align: center; 
+}
+
+#loggedInUser{
+	color: #FF1717; /* Login Red */
+	position: fixed;
+	right: 10px;
+	bottom: 10px;
+}
+
+
+/* Users Page */
+#addUserForm{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 10px;
+	padding: 8px;
+	width: 600px;
+	margin: auto;
+}
+
+/* Applications Page */
+#viewProfileTable{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 10px;
+	padding: 8px;
+	width: 200px;
+	margin: auto;
+}
+
+/* Other Page */
+#csvTable{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 10px;
+	padding: 8px;
+	width: 200px;
+	margin: auto;
+}
+
+#clearSemTable{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 10px;
+	padding: 8px;
+	width: 200px;
+	margin: auto;
+}
+
+#courseOptionsTable{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 10px;
+	padding: 8px;
+	width: 400px;
+	margin: auto;
+}
+
+#courseTable, #allAppTable, #userTable{
+	border: 2px solid black;
+	border-radius: 10px;
+	text-align: left;
+	border-spacing: 0px;
+	cell-padding: 20px;
+	overflow: scroll;
+	text-align: center; 
+	width: 100%;
+}
+
+#courseTable tbody tr:hover{
+	background-color: #ffff80; /* Hover Yellow */
+}
+#userTable tbody tr:hover{
+	background-color: #ffff80; 
+}
+#allAppTable tbody tr:hover{
+	background-color: #ffff80; 
+}
+
+#courseTable td, #allAppTable td{
+	padding: 5px;
+}
+
+#selected{
+	background-color: #ff8533;	/* Selected Orange */
+}
+
+input {
+	outline: 1px solid grey;
+}
+
+#myAppTable{
+	padding: 5px;
+	border-spacing: 10px;
+}
+
+#myProfileTable p{
+	text-indent: 20pt;
+}
+
+#pWhy, #pTAVol, #pTAExp{
+	width: 100px;
+	resize: vertical;
+	height: 80px;
+}
+
+#pageInfo{
+    overflow: scroll;
+}
+
+#tableWrap{
+	background-color: #aeccfc;	/* Light Blue */
+	position: relative;
+	max-height: 50%;
+	max-width: 65%;
+	overflow: scroll;
+}
+
+select #green{
+	background-color: green;
+}
+#errorMessage{
+	color: red;
+}
+
+#applicant:hover{
+	color: green;
+}
+

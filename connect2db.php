@@ -43,7 +43,7 @@
 		if ($_SESSION['loggedIn'] == "false"){
 			/* HTML for login table. Displayed when $_SESSION['loggedIn'] == False */
 			$loginTable = '<form id ="contentForm" method="post" action="">'.
-      			'<table id="login_table" style="border:2px solid black;">'.
+      			'<table id="loginTable" style="border:2px solid black;">'.
 				'<tr><th align="center" colspan="2">Login using a valid UTORID</th></tr>'.
 				'<tr><td align="right"> UTORID:</td><td>'.
 				'<input type="text" name="utorid" id="utorid" size="8"> </td></tr>'.

@@ -44,9 +44,8 @@
 					$_POST['CourseYear'].'","'.$_POST['CourseInstructor'].'","'.$_POST['CourseCampus'].'","'.
 					$_POST['TaPositions'].'","'.$_POST['TaPositions'].'","'.htmlspecialchars($_POST['Question1']).'"
 					,"'.htmlspecialchars($_POST['Question2']).'","'.htmlspecialchars($_POST['Question3']).'");';
-			echo $query;
 			mysqli_query($dbconnect, $query);
-			
+			echo $query;
 		}
 
 		/* Changing Instructor of a course */
@@ -99,7 +98,7 @@
 				$instStringHead .= $instStringBody;
 
 				/* Campus Select box */
-				$Campuses = '<select id="courseCampus"><option value="UTSTG"> UTSTG</option>'.
+				$Campuses = '<select id="courseCampus"><option value="UTSG"> UTSG</option>'.
 							'<option value="UTM"> UTM </option></select>';
 
 				/* Num TA Positions select */
@@ -119,9 +118,10 @@
 	
 
 			/* Creates the html code for the Course Table and the form for adding a course underneath */
-			$returnString .= '<table><tr><td>Remove a course: </td><td>'.
-							 '<button id="deleteCourse" onclick="deleteItem('."'".'Course'."'".')">'.
-							 'Delete Selected Course</button></td></tr><tr><td>Change Course'."'".'s Instructor to: </td>'.
+			$returnString .= '<table id="courseOptionsTable"><tr><td>Remove a course: </td>'.
+							 '<td><button id="deleteCourse" onclick="deleteItem('."'".'Course'."'".')">'.
+							 'Delete Selected Course</button></td></tr>'.
+							 '<tr><td>Change Course'."'".'s Instructor to: </td>'.
 							 '<td><select id="changeInstructor">'.$instStringBody.'</td><td>'.
 							 '<button id="changeCourseIns" onclick="changeCourseIns()">Update Teacher</button>'.
 							 '</td></tr></table><p>Add a course with form below: </p>'.
@@ -310,16 +310,17 @@
 			}
 			$returnString .= '</tr>';
 		}
-		$returnString.= '</tbody></table></div><br><button id="viewProfile"'.
-						'onclick="getProfile('."'Instructor')".'">View Profile</button><br>';
+		$returnString.= '</tbody></table></div><br><table id="viewProfileTable"><tr><td><center>'. 
+						'<button id="viewProfile"onclick="getProfile('."'Instructor')".'">'.
+						'View Profile</button></center><br></td></tr>';
 		
-		$returnString.= 'Sort by: <label for="Sort"></label><select id="appSort">
+		$returnString.= '<tr><td>Sort by: <label for="Sort"></label><select id="appSort">
 						<option value="UTORID">	UTORID</option>
 						<option value="Code"> Course Code</option>
 						<option value="Semester"> Term</option>
 						<option value="Year"> Year</option>
 						<option value="Instructor"> Instructor</option>
-						<option value="Tag">Status</option></select>';
+						<option value="Tag">Status</option></select></td></tr></table>';
 		
 		
 		echo $returnString;
@@ -391,7 +392,7 @@
 		}
 		$returnString .= '<tr></tbody></table></div><br>'.
 						 '<button id="deleteUser" onclick="deleteItem('."'".'User'."'".')">'.
-		                 'Remove Selected User</button><br>'.
+		                 'Remove Selected User</button><br><td><br></td>'.
 						 '<form id="addUserForm"><table><tr><td> Utorid:</td>'.
 						 '<td><input type="text" name="userUtorid" id="userUtorid" size="10"'.
 						 'maxlength="8"></td><td> Role:</td>'.
@@ -406,7 +407,7 @@
 						 '</td></tr>'.'<tr><td> Retype Pswd:</td><td colspan="3">'.
 						 '<input type="password" name="retypePassword" id="retypePassword" size="40">'.
 						 '</td></tr>'.'<tr><td>Email Address:</td>'.
-						 '<td><input type="text" name="email" id="email" size="40"'.
+						 '<td colspan="3"><input type="text" name="email" id="email" size="40"'.
 						 ' placeholder="UTOR Email Preferably"></td></tr>'.
 						 '</table><input type="submit" id="addUser" value="Add User"></form><br>';
 		echo $returnString;
@@ -466,13 +467,13 @@
 					'<tr><td><b>4th Choice:</b></td><td>'.$course4.'</td>'.
 					'<td><b>5th Choice:</b></td><td>'.$course5.'</td></tr>'.
 					'<tr><center><th colspan="6">My Past TA Experience</center><th></tr>'.
-					'<tr><td colspan="6"><textarea id="pTAExp" style="width: 100%;" '.
+					'<tr><td colspan="6"><textarea id="pTAExp" style="width: 100%;" maxlength="995";'.
 					'cols="25" rows="4"></textarea></td></tr>'.
 					'<tr><center><th colspan="6">My Extracurricular/Volunteer Activites</center><th></tr>'.
-					'<tr><td colspan="6"><textarea id="pTAVol" style="width: 100%;" '.
+					'<tr><td colspan="6"><textarea id="pTAVol" style="width: 100%;" maxlength="1995";'.
 					'cols="25" rows="4"></textarea></td></tr>'.
 					'<tr><center><th colspan="6">Why I'."'".'d Make a Good TA?</center><th></tr>'.
-					'<tr><td colspan="6"><textarea id="pTAWhy" style="width: 100%;" '.
+					'<tr><td colspan="6"><textarea id="pTAWhy" style="width: 100%;" maxlength="3995";'.
 					'cols="25" rows="4"></textarea></td></tr><tr><td>My email address: </td>'.
 					'<td colspan="5"><input type="text" id="userEmail" style="width: 100%;"></td></tr><tr><td>'.
 					'<input type="submit" id="submitPro" value="Update Profile">'.'</td></tr></table></form>'.
@@ -549,10 +550,9 @@
 		}
 	}
 	if(isset($_POST['OtherPage'])){
-		$returnString = '<button id="clearSemester">Clear Semester</button><br>'.
-						'<table id="csvTable"><form id="csvForm"><th>Upload a course CSV file</th>'.
+		$returnString = '<table id="csvTable"><form id="csvForm"><th>Upload a course CSV file</th>'.
 						'<tr><td><input id="file-input" type="file" name="name"/></td</tr>'.
-						'<tr><td><button id="uploadButton">Upload Courses</button></td></tr></form></table>';
+						'<tr><td><button id="uploadButton">Upload Courses</button></td></tr></form></table>'.'<br><table id="clearSemTable"><td>Clear Semester: <br></td><td><button id="clearSemester">Clear Semester</button></td></table>';
 		echo $returnString;
 	}
 	if(isset($_POST['CLEARSEMESTER'])){

@@ -105,7 +105,7 @@ $(document).on("mousedown", "#allAppTable tbody tr",function() {
 	selectedRow = $(this);
 });
 
-/* Collect old tage value */
+/* Collect old tag value */
 $(document).on("focus", '#allAppTable select', function(){
 	prevTag = $(this).val();
 	console.log(prevTag);	
@@ -114,9 +114,12 @@ $(document).on("focus", '#allAppTable select', function(){
 /* Collect new tag value */
 $(document).on("change", "#allAppTable select", function(e){
 	e.stopPropagation();
+	var previousTag = prevTag;
 	if(confirm("Are you sure you wish to change this " + 
 		"application's status?")){
-		changeTag($(this).val(),prevTag);
+		changeTag($(this).val(), prevTag);
+	}else{
+		$(this).val(previousTag);
 	}
 });
 /* ================= Student Application Page ================== */
@@ -154,7 +157,7 @@ $(document).on("submit", "#applyForm",function(page) {
 
 /* ===================== ADMIN Other Page ====================== */
 
-/* When Clear semeter is pressed */
+/* When Clear semester is pressed */
 $(document).on("click","#clearSemester",function(page){
 	if(confirm("Are you absolutely sure you would like to completely" +
 		" erase ALL the current courses and applications?")){
@@ -435,8 +438,13 @@ function courseApply(){
 
 /* Takes filled out application form data and submits it */
 function submitApplication(){
-	applyString = 'Grade="' + $("#grade").val() + '"&RowId="' + rowId + 
+	if (parseInt($("#grade").val()) > 100 || parseInt($("#grade").val()) < 0 || isNaN(parseInt($("#grade").val()))){
+		$("#errorMessage").text("Please enter a valid grade (0-100). ");
+		return 0;
+	}else{
+		applyString = 'Grade="' + $("#grade").val() + '"&RowId="' + rowId + 
 		'"&Late=0';
+	}
 	if(confirm('Are you sure you wish to submit this application?')){
 		if(!($("#answer1").length == 0)){
 			applyString += '&Answer1="'+ $("#answer1").val() + '"';
