@@ -8,6 +8,15 @@ $(document).ready(function(){
 	displayPageInfo('Courses');
 });
 
+/* Having the page buttons identify which is currently active */
+$(document).on("click",'#pageButtons button',function(e) {
+    $('#pageButtons button').not(this).css("background-color", "#cacdd1");
+    $(this).css("background-color", "#153363");
+	$('#pageButtons button').not(this).css("color", "black");
+    $(this).css("color", "white");
+    e.preventDefault();
+});
+
 /* ================================================================================= */
 /* ============================== Event Listeners ================================== */
 /* ================================================================================= */
@@ -165,13 +174,13 @@ $(document).on("click","#clearSemester",function(page){
 		displayPageInfo('Courses');
 		setTimeout(function() {
     		$("#errorMessage").text('Your semester was successfully cleared.');
-  		}, 100);
+  		}, 200);
 	}
 });
 
 /* When Upload CSV is pressed */
 $(document).on("click","#uploadButton",function(page){
-	
+	page.preventDefault();
 	if (window.File && window.FileReader && window.FileList && window.Blob) {
 	  // Great success! All the File APIs are supported.
 	} else {
@@ -185,8 +194,6 @@ $(document).on("click","#uploadButton",function(page){
 		uploadCourses(readText);
 	}
 	reader.readAsText(file);
-	console.log('test');
-	//page.preventDefault();
 });
 
 /* ================== Login/ Logout Features =================== */
@@ -280,17 +287,15 @@ function displayPageInfo(page){
 			if(response.includes("placeValues()")){
 				$("#pageInfo").html(response.replace('placeValues()',''));
 				placeValues();
-			}else if(response.includes(("changeSort"))){
-				$("#pageInfo").html(response.replace('changeSort',''));
-				$("#appSort").val(prevSort);
 			}else if(response.includes(("getTags()"))){
 				$("#pageInfo").html(response.replace('getTags()',''));
+				$("#appSort").val(prevSort);
 				updateTags();
 			}else{
 				$("#pageInfo").html(response);
 			}
 			$("#errorMessage").text("");
-			console.log(response);
+			//console.log(response);
 		},
 		error: function(){
 			$("#pageInfo").html('<p>Error connecting to database</p>');

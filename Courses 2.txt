@@ -1,0 +1,13 @@
+CSC108,Introduction to Computer Programming,S,peterson,UTM,6,2017,How experienced are you with Python?,Did you do Programming in Highschool?,Are you a robot?
+CSC148,Introduction to Computer Science,S,rosenblo,UTM,5,2017,Would you be good with communicating with first years?,What is 12-6?,
+CSC207,Software Design,S,zingarod,UTM,4,2017,Your experience with Java?,Have you done any projects in Java?,
+CSC209,Software Tools and Systems Programming,S,zhanglar,UTSG,3,2017,How good are you with forks? Pipes?,Any experience with C?,
+CSC209,Software Tools and Systems Programming,S,rosebvlo,UTM,4,2017,How good are you with forks? Pipes?,Any experience with C?,
+CSC236,Introduction to Theory of Computation,S,zingarod,UTM,4,2017,Are you a fan of theory?,Favourite course you've taken so far?,
+CSC258,Computer Organization,S,pererson,UTM,3,2017,Your favourite gate?,What 2 gates is a NAND compsed of?,Do you have Assembly experience?
+CSC263,Data Structures and Analysis,S,zingarod,UTM,4,2017,Your favourite Algorthm?,Why is this your favourite algorithm?,
+CSC209,Communication Skills for Computer Scientists,S,rosenblo,UTM,5,2017,How much did you love this course?,Did you find this useful? How so?,
+CSC301,Introduction to Software Engineering,S,bonneran,UTM,3,2017,Are you familiar with the scrum process?,How comfortable are you marking?,Can you work in a team setting?
+CSC309,Programming on the Web,S,rosenlbo,UTM,3,2017,Any experience with Jquery/ Ajax?,"Favourite website, why?",Do you prefer front end/ back end?
+CSC324,Principles of Programming Languages,S,bonneran,UTM,5,2017,Are you familiar with recursion?,Will you be too busy to mark many assignments?,Did you enjoy working with ML?
+CSC324,Principles of Programming Languages,S,bonneran,UTSG,4,2017,Are you familiar with recursion?,Will you be too busy to mark many assignments?,Did you enjoy working with ML?

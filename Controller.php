@@ -45,7 +45,7 @@
 					$_POST['TaPositions'].'","'.$_POST['TaPositions'].'","'.htmlspecialchars($_POST['Question1']).'"
 					,"'.htmlspecialchars($_POST['Question2']).'","'.htmlspecialchars($_POST['Question3']).'");';
 			mysqli_query($dbconnect, $query);
-			echo $query;
+			//echo $query;
 		}
 
 		/* Changing Instructor of a course */
@@ -124,8 +124,9 @@
 							 '<tr><td>Change Course'."'".'s Instructor to: </td>'.
 							 '<td><select id="changeInstructor">'.$instStringBody.'</td><td>'.
 							 '<button id="changeCourseIns" onclick="changeCourseIns()">Update Teacher</button>'.
-							 '</td></tr></table><p>Add a course with form below: </p>'.
-							 '<form id="addCourseForm"><table><tr><td> Course Code:</td>'.
+							 '</td></tr></table><br>'.'<form id="addCourseForm"><table>'.
+							 '<thead><tr><th colspan="6" align="center">Add a course with form below: '.
+							 '</td></th></thead><tr><td> Course Code:</td>'.
 							 '<td><input type="text" name="courseCode" id="courseCode" size="7"></td>'. 
 							 '<td> Title:</td>'.
 							 '<td colspan="3"><input type="text" name="courseTitle" id="courseTitle" size="40">'.
@@ -156,7 +157,7 @@
 		$result = mysqli_query($dbconnect, $query);
 		$row =  mysqli_fetch_array($result, MYSQLI_NUM);
 		$returnString = '<center><form id="applyForm"><table id="applyTable"><tr><th align="center" colspan="2">'.
-				'Application for '.trim($_POST["RowCourse"],'"').' ('.trim($_POST["RowTerm"],'"').') with Prof.'.
+				'Application for '.trim($_POST["RowCourse"],'"').' ('.trim($_POST["RowTerm"],'"').')'.
 				'</th></tr>';
 				if(!(strlen($row[0])==1)){
 					$returnString .= '<tr><td>'.$row[0].'</td></tr>'.
@@ -167,7 +168,6 @@
 				'<tr><td><textarea id="answer2" cols="40" rows="4"></textarea></td></tr>';
 				}
 				if(!(strlen($row[2])==1)){
-					echo 'yo: ',$row[2],strlen($row[2]);
 					$returnString .= '<tr><td>'.$row[2].'</td></tr>'.
 					'<tr><td><textarea id="answer3" cols="40" rows="4"></textarea></td></tr>';
 				}
@@ -281,7 +281,6 @@
 		if (isset($_POST['Sort'])){
 			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS,TAG '.
 				 'FROM (COURSE NATURAL JOIN APPLICATIONS) ORDER BY ' . $_POST['SortValue'] . ';';
-			$returnString.= "changeSort";
 		}else{		
 			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS,TAG '.
 				 'FROM (COURSE NATURAL JOIN APPLICATIONS);';
@@ -545,7 +544,7 @@
 				$query2 = 'UPDATE USERS SET EMAIL="'.$_POST['Email'].'" WHERE UTORID="'.
 						$_SESSION['user'].'";';
 				mysqli_query($dbconnect, $query2);
-				echo $query2;
+				//echo $query2;
 			}
 		}
 	}

@@ -104,6 +104,15 @@ body{
 	margin: auto;
 }
 
+#addCourseForm{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 10px;
+	padding: 8px;
+	width: 600px;
+	margin: auto;
+}
+
 #courseTable, #allAppTable, #userTable{
 	border: 2px solid black;
 	border-radius: 10px;
@@ -174,4 +183,16 @@ select #green{
 #applicant:hover{
 	color: green;
 }
+
+thead{
+	color: black;
+}
+
+#pageButtons button{
+	background-color: #cacdd1;
+	height: 30px;
+	width: 110px;
+	font-size: 100%;
+}
+
 

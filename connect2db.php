@@ -61,7 +61,7 @@
 					'</td><td><button id="usersPage" onclick="displayPageInfo(' . "'Users'" .
 					');selectedRow=null;">Users</button></td>'.
 					'</td><td><button id="appPage" onclick="displayPageInfo(' . "'All_Applications'" .
-					'); selectedRow=null;">All Applications</button></td>'.
+					'); selectedRow=null;">Applications</button></td>'.
 					'<td><button id="otherPage" onclick="displayPageInfo(' . "'OtherPage'" .
 					')">Other</button></td>'.
 					'<td id="loggedInUser">Logged in as: '. $_SESSION['user'].'</td></tr></table></center><br>';
@@ -75,7 +75,7 @@
 					'<td><button id="usersPage" onclick="displayPageInfo(' . "'Users'" .
 					');selectedRow=null;">Users</button></td>'.
 					'</td><td><button id="appPage" onclick="displayPageInfo(' . "'All_Applications'" .
-					');selectedRow=null;">All Applications</button></td>'.
+					');selectedRow=null;">Applications</button></td>'.
 					'<td id="loggedInUser">Logged in as: '. $_SESSION['user'].'</td></tr></table></center><br>';
 				echo $instructorPages;
 			}
@@ -86,7 +86,7 @@
 					  '</td><td><button id="profile" onclick="getProfile('."'MyProfile'".')">'.
 					  'My Profile</button></td><td>'.
 					  '<button id="applications" onclick="displayPageInfo('."'My_Applications'".')">'.
-					  'My Applications</button></td>'.
+					  'Applications</button></td>'.
 					  '<td><button id="contact">Contact</botton></td>'.
 					  '<td id="loggedInUser">Logged in as: '. $_SESSION['user'].'</td></tr></table></center><br>';
 				echo $applicantPages;
