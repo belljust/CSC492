@@ -57,7 +57,7 @@ body{
 
 
 /* Users Page */
-#addUserForm{
+#addUserTable{
 	background-color: #aeccfc;	/* Light Blue */
 	border:2px solid black;
 	border-radius: 10px;
@@ -74,6 +74,22 @@ body{
 	padding: 8px;
 	width: 200px;
 	margin: auto;
+}
+
+#myAppTable{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 10px;
+	border-spacing: 10px;
+	padding: 8px;
+	width: 200px;
+	margin: auto;
+}
+
+
+
+#myProfileTable p{
+	text-indent: 20pt;
 }
 
 /* Other Page */
@@ -144,15 +160,6 @@ body{
 
 input {
 	outline: 1px solid grey;
-}
-
-#myAppTable{
-	padding: 5px;
-	border-spacing: 10px;
-}
-
-#myProfileTable p{
-	text-indent: 20pt;
 }
 
 #pWhy, #pTAVol, #pTAExp{

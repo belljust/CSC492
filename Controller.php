@@ -125,7 +125,7 @@
 							 '<td><select id="changeInstructor">'.$instStringBody.'</td><td>'.
 							 '<button id="changeCourseIns" onclick="changeCourseIns()">Update Teacher</button>'.
 							 '</td></tr></table><br>'.'<form id="addCourseForm"><table>'.
-							 '<thead><tr><th colspan="6" align="center">Add a course with form below: '.
+							 '<thead><tr><th colspan="6" align="center">Add a Course: '.
 							 '</td></th></thead><tr><td> Course Code:</td>'.
 							 '<td><input type="text" name="courseCode" id="courseCode" size="7"></td>'. 
 							 '<td> Title:</td>'.
@@ -145,7 +145,7 @@
 							 '</td></tr></table><input type="submit" id="addCourse" value="Add course"></form>';
 		}
 		elseif($_SESSION['role'] == 'APPLICANT'){
-			$returnString.= '<center><button id="apply">Apply For Selected Course</botton></center>';
+			$returnString.= '<center><button id="apply">Apply For Selected Course</botton></center><br>';
 		}
 		echo $returnString;
 		mysqli_free_result($result);
@@ -392,7 +392,9 @@
 		$returnString .= '<tr></tbody></table></div><br>'.
 						 '<button id="deleteUser" onclick="deleteItem('."'".'User'."'".')">'.
 		                 'Remove Selected User</button><br><td><br></td>'.
-						 '<form id="addUserForm"><table><tr><td> Utorid:</td>'.
+						 '<form id="addUserForm"><table id="addUserTable"><tr>'.
+						  '<thead><tr><th colspan="6" align="center">Add a User:</td></th></thead>'.
+						 '<td> Utorid:</td>'.
 						 '<td><input type="text" name="userUtorid" id="userUtorid" size="10"'.
 						 'maxlength="8"></td><td> Role:</td>'.
 						 '<td><select id="userRole"><option value="APPLICANT"> Applicant</option>'.
@@ -513,7 +515,7 @@
 			/* Only display edit button for the owner of the profile */
 			if(($_SESSION['role'] == 'APPLICANT') && !(isset($_POST['EditProfile']))){
 				$returnString.= '<button id="editProfile" onclick="editProfile()">'.
-								'Edit Profile</button>';
+								'Edit Profile</button><td><br></td><br>';
 			}
 			echo $returnString;	
 		}
