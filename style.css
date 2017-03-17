@@ -107,7 +107,6 @@ body{
 	resize: vertical;
 	height: 80px;
 }
-/*margin: 1em 0;*/
 
 /* Other Page */
 #csvTable{
@@ -206,8 +205,15 @@ thead{
 	color: black;
 }
 
-#pageButtons button{
+#pageButtons #usersPage,#appPage,#otherPage,#contactPage,#profilePage{
 	background-color: #cacdd1;
+	height: 30px;
+	width: 110px;
+	font-size: 100%;
+}
+#coursePage{
+	background-color: #153363;
+	color: white;
 	height: 30px;
 	width: 110px;
 	font-size: 100%;

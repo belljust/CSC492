@@ -391,9 +391,9 @@
 		}
 		$returnString .= '<tr></tbody></table></div><br>'.
 						 '<button id="deleteUser" onclick="deleteItem('."'".'User'."'".')">'.
-		                 'Remove Selected User</button><br><td><br></td>'.
-						 '<form id="addUserForm"><table id="addUserTable"><tr>'.
-						 '<thead><tr><th colspan="6" align="center">Add a User:</td></th></thead>'.
+		                 'Remove Selected User</button><br>'.
+						 '<form id="addUserForm"><table id="addUserTable">'.
+						 '<thead><tr><th colspan="6" align="center">Add a User:</tr></th></thead>'.
 						 '<td> Utorid:</td>'.
 						 '<td><input type="text" name="userUtorid" id="userUtorid" size="10"'.
 						 'maxlength="8"></td><td> Role:</td>'.
@@ -410,7 +410,8 @@
 						 '</td></tr>'.'<tr><td>Email Address:</td>'.
 						 '<td colspan="3"><input type="text" name="email" id="email" size="40"'.
 						 ' placeholder="UTOR Email Preferably"></td></tr>'.
-						 '</table><td><br></td><br><input type="submit" id="addUser" value="Add User"></form><br>';
+						 '<tr><th colspan="6" align="center" style="border-bottom: 0;">'.
+						 '<input type="submit" id="addUser" value="Add User"></th></tr></table></form>';
 		echo $returnString;
 		mysqli_free_result($result);
 	}
@@ -477,7 +478,7 @@
 					'<tr><td colspan="6"><textarea id="pTAWhy" style="width: 100%;" maxlength="3995";'.
 					'cols="25" rows="4"></textarea></td></tr><tr><td>My email address: </td>'.
 					'<td colspan="5"><input type="text" id="userEmail" style="width: 100%;"></td></tr><tr><td>'.
-					'<input type="submit" id="submitPro" value="Update Profile">'.'</td></tr></table></form>'.
+					'<input type="submit" id="submitPro" value="Update Profile">'.'</td></tr></table></form></table>'.
 					'placeValues()';
 			}else{
 				/* Return message when profile is empty */
