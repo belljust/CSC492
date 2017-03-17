@@ -578,13 +578,13 @@ function editProfile(){
         		status += $(this).text(); break;
         	case 14:
         		year += $(this).text().substr(27,50); break;
-        	case 15:
-        		taExp += $(this).text().substr(23,1000); break;
         	case 16:
-        		taVol += $(this).text().substr(42,1000); break;
+        		taExp += $(this).text().substr(23,995); break;
         	case 17:
-        		taWhy += $(this).text().substr(29,1000); break;
-        	case 19: 
+        		taVol += $(this).text().substr(42,1995); break;
+        	case 18:
+        		taWhy += $(this).text().substr(29,3995); break;
+        	case 20: 
         		email += $(this).text(); break;
 		}
 		i++;

@@ -477,7 +477,7 @@
 					'<tr><td colspan="6"><textarea id="pTAWhy" style="width: 100%;" maxlength="3995";'.
 					'cols="25" rows="4"></textarea></td></tr><tr><td>My email address: </td>'.
 					'<td colspan="5"><input type="text" id="userEmail" style="width: 100%;"></td></tr><tr><td>'.
-					'<input type="submit" id="submitPro" value="Update Profile">'.'</td></tr></table></form></table>'.
+					'<input type="submit" id="submitPro" value="Update Profile">'.'</td></tr></table></form>'.
 					'placeValues()';
 			}else{
 				/* Return message when profile is empty */
@@ -489,7 +489,7 @@
 								$row[1].'</td></tr><tr><td id="lName"><b>Last Name:</b> '.$row[2].'</td></tr>'.
 								'<tr><td><b>First Choice: </b></td><td id="choice1">'.$row[5].'</td></tr>'.
 								'<tr><td><b>Second Choice: </b></td><td id="choice2">'.$row[6].'</td></tr>'.
-								'<tr><td><b>Third Choice:</b></td><td id="choice3">'.$row[7].'</td></tr>'.
+								'<tr><td><b>Third Choice: </b></td><td id="choice3">'.$row[7].'</td></tr>'.
 								'<tr><td><b>Fourth Choice: </b></td><td id="choice4">'.$row[8].'</td></tr>'.
 								'<tr><td><b>Fifth Choice: </b></td><td id="choice5">'.$row[9].'</td></tr>'.
 								'<tr><td id="pStatus"><b>Student Status:</b></td><td>'.$row[3].'</td>'.
@@ -498,7 +498,7 @@
 								'<td><br></td><br>'.
 								'<tr><td colspan="6"  id="taExp"><b>My Past TA Experience: </b><p>'.
 								$row[10].'</p></td></tr>'.
-					 			'<tr><td colspan="6"  id="taVol"><b>My Extracurricular/ Volunteer Activities:'.
+					 			'<tr><td colspan="6"  id="taVol"><b>My Extracurricular / Volunteer Activities: '.
 					 			' </b><p>'.$row[11].'</p></td></tr>'.
 								'<tr><td colspan="6" id="taWhy"><b>Why Would I Make a Good TA?: </b><p>'.
 								$row[12].'</p></td></tr>'.'<tr>';
@@ -506,7 +506,7 @@
 							$returnString.= '<td>Send Email to '.$row[1].'?</td><td><a href="mailto:'.$row[13].
 										'?Subject=TA%20Application" taget="_blank">'.$row[13].'</a>';
 						}else{
-							$returnString.= '<td>My email address: </td><td>'.$row[13];
+							$returnString.= '<td><b>My email address: </b></td><td>'.$row[13];
 						}
 						$returnString.= '</td></tr></table></form>';
 					}
