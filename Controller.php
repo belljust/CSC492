@@ -222,7 +222,7 @@
 
 	if(isset($_POST['All_Applications'])) {
 		$returnString = 'getTags()<div id="tableWrap"><table id="allAppTable"><thead><th align="center" colspan="7">'.
-						'All Applications</th><tr><td>UTORID</td><td>Course Code</td><td>Term</td>'.
+						'ALL APPLICATIONS</th><tr><td>UTORID</td><td>Course Code</td><td>Term</td>'.
 						'<td>Year</td><td>Instructor</td><td>Campus</td><td>Status</td></tr></thead><tbody>';	
 	
 		if(isset($_POST['ChangeTag'])){
@@ -393,7 +393,7 @@
 						 '<button id="deleteUser" onclick="deleteItem('."'".'User'."'".')">'.
 		                 'Remove Selected User</button><br><td><br></td>'.
 						 '<form id="addUserForm"><table id="addUserTable"><tr>'.
-						  '<thead><tr><th colspan="6" align="center">Add a User:</td></th></thead>'.
+						 '<thead><tr><th colspan="6" align="center">Add a User:</td></th></thead>'.
 						 '<td> Utorid:</td>'.
 						 '<td><input type="text" name="userUtorid" id="userUtorid" size="10"'.
 						 'maxlength="8"></td><td> Role:</td>'.
@@ -410,7 +410,7 @@
 						 '</td></tr>'.'<tr><td>Email Address:</td>'.
 						 '<td colspan="3"><input type="text" name="email" id="email" size="40"'.
 						 ' placeholder="UTOR Email Preferably"></td></tr>'.
-						 '</table><input type="submit" id="addUser" value="Add User"></form><br>';
+						 '</table><td><br></td><br><input type="submit" id="addUser" value="Add User"></form><br>';
 		echo $returnString;
 		mysqli_free_result($result);
 	}
@@ -425,7 +425,7 @@
 				 CHOICE5,TA_EXP,VOLUNTEER,BLURB,EMAIL FROM (USERS NATURAL JOIN PROFILES) WHERE UTORID="'.
 				 $_POST['ProfileId'].'";';
 			$result = mysqli_query($dbconnect, $query);
-			$returnString = '<form id="editApplication"><table id="myProfileTable"><tr>'.
+			$returnString = '<div id="editMyProfile"><form id="editApplication"><table id="myProfileTable"><tr>'.
 							'<th align="center" colspan="12">';
 
 			if(isset($_POST['EditProfile'])){
@@ -477,7 +477,7 @@
 					'<tr><td colspan="6"><textarea id="pTAWhy" style="width: 100%;" maxlength="3995";'.
 					'cols="25" rows="4"></textarea></td></tr><tr><td>My email address: </td>'.
 					'<td colspan="5"><input type="text" id="userEmail" style="width: 100%;"></td></tr><tr><td>'.
-					'<input type="submit" id="submitPro" value="Update Profile">'.'</td></tr></table></form>'.
+					'<input type="submit" id="submitPro" value="Update Profile">'.'</td></tr></table></form></table>'.
 					'placeValues()';
 			}else{
 				/* Return message when profile is empty */
@@ -485,22 +485,23 @@
 					$returnString.= 'THIS PROFILE IS EMPTY!</th></tr></table></form>';
 				}else{ 
 					while($row = mysqli_fetch_array($result, MYSQLI_NUM)){
-						$returnString.= $row[0]. "'s Profile</th></tr>".'<tr><td id="fName"><b>First Name:</b>'.
-								$row[1].'</td><td id="lName"><b>Last Name:</b> '.$row[2].'</td></tr>'.
-								'<tr><td><b>First Choice: </b></td><td id="choice1">'.$row[5].'</td>'.
-								'<td><b>Second Choice: </b></td><td id="choice2">'.$row[6].'</td>'.
-								'<td><b>Third Choice:</b></td><td id="choice3">'.$row[7].'</td>'.
-								'<td><b>Fourth Choice: </b></td><td id="choice4">'.$row[8].'</td>'.
-								'<td><b>Fifth Choice: </b></td><td id="choice5">'.$row[9].'</td></tr>'.
+						$returnString.= $row[0]. "'s Profile</th></tr>".'<tr><td id="fName"><b>First Name: </b>'.
+								$row[1].'</td></tr><tr><td id="lName"><b>Last Name:</b> '.$row[2].'</td></tr>'.
+								'<tr><td><b>First Choice: </b></td><td id="choice1">'.$row[5].'</td></tr>'.
+								'<tr><td><b>Second Choice: </b></td><td id="choice2">'.$row[6].'</td></tr>'.
+								'<tr><td><b>Third Choice:</b></td><td id="choice3">'.$row[7].'</td></tr>'.
+								'<tr><td><b>Fourth Choice: </b></td><td id="choice4">'.$row[8].'</td></tr>'.
+								'<tr><td><b>Fifth Choice: </b></td><td id="choice5">'.$row[9].'</td></tr>'.
 								'<tr><td id="pStatus"><b>Student Status:</b></td><td>'.$row[3].'</td>'.
 								'<td colspan="6" id="studyYear"><b>My Current Year of Study: </b> '.
 								$row[4].'</td></tr>'.
-								'<tr><td colspan="6"  id="taExp"><b>My Past TA Experience: </b><pre>'.
-								$row[10].'</pre></td></tr>'.
+								'<td><br></td><br>'.
+								'<tr><td colspan="6"  id="taExp"><b>My Past TA Experience: </b><p>'.
+								$row[10].'</p></td></tr>'.
 					 			'<tr><td colspan="6"  id="taVol"><b>My Extracurricular/ Volunteer Activities:'.
-					 			' </b><pre>'.$row[11].'</pre></td></tr>'.
-								'<tr><td colspan="6" id="taWhy"><b>Why Would I Make a Good TA?: </b><pre>'.
-								$row[12].'</pre></td></tr>'.'<tr>';
+					 			' </b><p>'.$row[11].'</p></td></tr>'.
+								'<tr><td colspan="6" id="taWhy"><b>Why Would I Make a Good TA?: </b><p>'.
+								$row[12].'</p></td></tr>'.'<tr>';
 						if(!($_SESSION['role'] == "APPLICANT")){
 							$returnString.= '<td>Send Email to '.$row[1].'?</td><td><a href="mailto:'.$row[13].
 										'?Subject=TA%20Application" taget="_blank">'.$row[13].'</a>';

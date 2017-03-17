@@ -86,11 +86,28 @@ body{
 	margin: auto;
 }
 
+/* Profile Page */
 
+#editMyProfile{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 10px;
+	padding: 8px;
+	width: 1000px;
+	margin: auto;
+}
 
 #myProfileTable p{
 	text-indent: 20pt;
+    display: block;
 }
+
+#pWhy, #pTAVol, #pTAExp{
+	width: 100px;
+	resize: vertical;
+	height: 80px;
+}
+/*margin: 1em 0;*/
 
 /* Other Page */
 #csvTable{
@@ -160,12 +177,6 @@ body{
 
 input {
 	outline: 1px solid grey;
-}
-
-#pWhy, #pTAVol, #pTAExp{
-	width: 100px;
-	resize: vertical;
-	height: 80px;
 }
 
 #pageInfo{
