@@ -188,36 +188,49 @@
 		mysqli_free_result($result);
 
 		if(isset($_POST['Answer1'])){
-			$Answer1 = $_POST['Answer1'];
+			$Answer1 =  mysqli_real_escape_string($dbconnect,$_POST['Answer1']);
 		}else{
 			$Answer1 = 'null';
 		}
 		if(isset($_POST['Answer2'])){
-			$Answer2 = $_POST['Answer2'];
+			$Answer2 = mysqli_real_escape_string($dbconnect,$_POST['Answer2']);
 		}else{
 			$Answer2 = 'null';
 		}
 		if(isset($_POST['Answer3'])){
-			$Answer3 = $_POST['Answer3'];
+			$Answer3 = mysqli_real_escape_string($dbconnect,$_POST['Answer3']);
 		}else{
 			$Answer3 = 'null';
 		}
-		/* Adding the answers from post into Answers table. */
-		$query = 'INSERT INTO ANSWERS VALUES('.($row[0] + 1).','.$Answer1.','.$Answer2.
-			   	 ','.$Answer3.','.$_POST['Grade'].');';
-		mysqli_query($dbconnect, $query);
 
-		/* Adding the Application info into applications table. */
-		$query = 'INSERT INTO APPLICATIONS VALUES ("'.$_SESSION['user'].'",'.$_POST['RowId'].',"'.
-				 $_POST['Late'].'","'.($row[0] + 1).'","Pending");';
-		if(!(mysqli_query($dbconnect, $query))){
-			$query = 'DELETE FROM ANSWERS WHERE AID='.($row[0] + 1).';';
-			mysqli_query($dbconnect, $query);
-			echo "<br><p>You have already submitted an application for this course!</p>";
+		if(isset($_POST['Overwrite'])){
+			$query = 'SELECT AID FROM APPLICATIONS NATURAL JOIN ANSWERS WHERE CID='.
+				      $_POST['RowId'].';';
+			$result = mysqli_query($dbconnect, $query);
+			$row =  mysqli_fetch_array($result, MYSQLI_NUM);
+
+			$query2 = 'UPDATE ANSWERS SET ANSWER_1="'.htmlspecialchars($Answer1).'",ANSWER_2="'.
+					  htmlspecialchars($Answer2).'",ANSWER_3="'.htmlspecialchars($Answer3).
+					  '",MARK_RECEIVED='.$_POST['Grade'].' WHERE AID='.$row[0].';';
+			mysqli_query($dbconnect, $query2);
+			echo $query2;
+
 		}else{
-			echo "<br><p>Thanks, Your Application has been submitted!</p>";
-		}
-		
+			/* Adding the answers from post into Answers table. */
+			$query = 'INSERT INTO ANSWERS VALUES('.($row[0] + 1).','.$Answer1.','.$Answer2.
+				   	 ','.$Answer3.','.$_POST['Grade'].');';
+			mysqli_query($dbconnect, $query);
+			/* Adding the Application info into applications table. */
+			$query = 'INSERT INTO APPLICATIONS VALUES ("'.$_SESSION['user'].'",'.$_POST['RowId'].',"'.
+					 $_POST['Late'].'","'.($row[0] + 1).'","Pending");';
+			if(!(mysqli_query($dbconnect, $query))){
+				$query = 'DELETE FROM ANSWERS WHERE AID='.($row[0] + 1).';';
+				mysqli_query($dbconnect, $query);
+				echo "alreadySubmitted()";
+			}else{
+				echo "<br><p>Thanks, Your Application has been submitted!</p>";
+			}
+		}		
 	}
 
 	if(isset($_POST['All_Applications'])) {
@@ -523,14 +536,19 @@
 		}
 
 		if(isset($_POST['UpdateProfile'])){
+			$Answer1 =  mysqli_real_escape_string($dbconnect,$_POST['TaExp']);
+			$Answer2 =  mysqli_real_escape_string($dbconnect,$_POST['TaVol']);
+			$Answer3 =  mysqli_real_escape_string($dbconnect,$_POST['TaWhy']);
+			$Answer4 =  mysqli_real_escape_string($dbconnect,$_POST['Email']);
+
 			$query = 'SELECT COUNT(*) FROM PROFILES WHERE UTORID="'.$_SESSION['user'].'";';
 			$result = mysqli_query($dbconnect, $query);
 			$row = mysqli_fetch_array($result, MYSQLI_NUM);
 			if($row[0] == 0){
 				$query = 'INSERT INTO PROFILES VALUES(NULL,"'.$_SESSION['user'].'","'.$_POST['Status'].'","'.
 				$_POST['Year'].'","'.$_POST['Choice1'].'","'.$_POST['Choice2'].'","'.$_POST['Choice3'].
-				'","'.$_POST['Choice4'].'","'.$_POST['Choice5'].'","'.htmlspecialchars($_POST['TaExp']).
-				'","'.htmlspecialchars($_POST['TaVol']).'","'.htmlspecialchars($_POST['TaWhy']).'");';
+				'","'.$_POST['Choice4'].'","'.$_POST['Choice5'].'","'.htmlspecialchars($Answer1).
+				'","'.htmlspecialchars($Answer2).'","'.htmlspecialchars($Answer3).'");';
 				mysqli_query($dbconnect, $query);
 			}
 			else{
@@ -539,17 +557,15 @@
 						'", CHOICE1="'.$_POST['Choice1']. '", CHOICE2="'.$_POST['Choice2'].
 						'", CHOICE3="'.$_POST['Choice3']. '", CHOICE4="'.$_POST['Choice4'].
 						'", CHOICE5="'.$_POST['Choice5']. 
-						'", TA_EXP="'.htmlspecialchars($_POST['TaExp']).
-						'", VOLUNTEER="'.htmlspecialchars($_POST['TaVol']).
-						'", BLURB="'.htmlspecialchars($_POST['TaWhy']).'" WHERE UTORID="'.
+						'", TA_EXP="'.htmlspecialchars($Answer1).
+						'", VOLUNTEER="'.htmlspecialchars($Answer2).
+						'", BLURB="'.htmlspecialchars($Answer3).'" WHERE UTORID="'.
 						$_SESSION['user'].'";';
 				mysqli_query($dbconnect, $query);
-				
-				$query2 = 'UPDATE USERS SET EMAIL="'.$_POST['Email'].'" WHERE UTORID="'.
-						$_SESSION['user'].'";';
-				mysqli_query($dbconnect, $query2);
-				//echo $query2;
 			}
+			$query2 = 'UPDATE USERS SET EMAIL="'.htmlspecialchars($Answer4).'" WHERE UTORID="'.
+					$_SESSION['user'].'";';
+			mysqli_query($dbconnect, $query2);
 		}
 	}
 	if(isset($_POST['OtherPage'])){

@@ -291,6 +291,12 @@ function displayPageInfo(page){
 				$("#pageInfo").html(response.replace('getTags()',''));
 				$("#appSort").val(prevSort);
 				updateTags();
+			}else if(response.includes(("alreadySubmitted()"))){
+				if(confirm("You've already submitted a application for this" +
+					" course, would you like to overwrite?")){
+					submitApplication('overwrite');
+					$('#pageInfo').html('Your Application is updated.');	
+				}			
 			}else{
 				$("#pageInfo").html(response);
 			}
@@ -442,7 +448,7 @@ function courseApply(){
 }
 
 /* Takes filled out application form data and submits it */
-function submitApplication(){
+function submitApplication(overwrite){
 	if (parseInt($("#grade").val()) > 100 || parseInt($("#grade").val()) < 0 || isNaN(parseInt($("#grade").val()))){
 		$("#errorMessage").text("Please enter a valid grade (0-100). ");
 		return 0;
@@ -450,20 +456,22 @@ function submitApplication(){
 		applyString = 'Grade="' + $("#grade").val() + '"&RowId="' + rowId + 
 		'"&Late=0';
 	}
-	if(confirm('Are you sure you wish to submit this application?')){
-		if(!($("#answer1").length == 0)){
-			applyString += '&Answer1="'+ $("#answer1").val() + '"';
-		}
-		if(!($("#answer2").length == 0)){
-			applyString += '&Answer2="'+ $("#answer2").val() + '"';
-		}
-		if(!($("#answer3").length == 0)){
-			applyString += '&Answer3="'+ $("#answer3").val() + '"';
-		}
-		
-		applyString += '&ApplySubmit=';
-		displayPageInfo(applyString);
+	
+	if(!($("#answer1").length == 0)){
+		applyString += '&Answer1='+ $("#answer1").val();
 	}
+	if(!($("#answer2").length == 0)){
+		applyString += '&Answer2='+ $("#answer2").val();
+	}
+	if(!($("#answer3").length == 0)){
+		applyString += '&Answer3='+ $("#answer3").val();
+	}
+	if(overwrite !== undefined){
+		applyString += '&Overwrite=True';
+	}
+	applyString += '&ApplySubmit=';
+	displayPageInfo(applyString);
+	
 }
 
 /*  Retrieves all info of the selected row in the Oppourtunities  table */
@@ -581,7 +589,7 @@ function editProfile(){
         	case 16:
         		taExp += $(this).text().substr(23,995); break;
         	case 17:
-        		taVol += $(this).text().substr(42,1995); break;
+        		taVol += $(this).text().substr(44,1995); break;
         	case 18:
         		taWhy += $(this).text().substr(29,3995); break;
         	case 20: 
