@@ -118,31 +118,38 @@
 	
 
 			/* Creates the html code for the Course Table and the form for adding a course underneath */
-			$returnString .= '<table id="courseOptionsTable"><tr><td>Remove a course: </td>'.
-							 '<td><button id="deleteCourse" onclick="deleteItem('."'".'Course'."'".')">'.
-							 'Delete Selected Course</button></td></tr>'.
-							 '<tr><td>Change Course'."'".'s Instructor to: </td>'.
-							 '<td><select id="changeInstructor">'.$instStringBody.'</td><td>'.
-							 '<button id="changeCourseIns" onclick="changeCourseIns()">Update Teacher</button>'.
-							 '</td></tr></table><br>'.'<form id="addCourseForm"><table>'.
-							 '<thead><tr><th colspan="6" align="center">Add a Course: '.
-							 '</td></th></thead><tr><td> Course Code:</td>'.
-							 '<td><input type="text" name="courseCode" id="courseCode" size="7"></td>'. 
-							 '<td> Title:</td>'.
-							 '<td colspan="3"><input type="text" name="courseTitle" id="courseTitle" size="40">'.
-							 '</td></tr>'.'<tr><td> Term Offered:</td><td><select id="courseTerm">'.
-							 '<option value="W">Winter</option><option value="F">Fall</option>'.
-							 '<option value="S">Summer</option></select></td>'.
-							 '<td> Instructor:</td><td>'.$instStringHead.'</td><td> Campus:</td><td>'.
-							 $Campuses.'</td></tr><tr><td>TA Positions: </td><td>'.$Positions.'</td>'.
-							 '<td>Year: </td><td>'.$years.'</td></tr>'.
-							 '<tr><td> Question 1:</td>'.
-							 '<td colspan="5"><input type="text" name="Question1" id="question1" size="63">'.
-							 '</td></tr><tr><td> Question 2:</td>'.
-							 '<td colspan="5"><input type="text" name="Question2" id="question2" size="63">'.
-							 '</td></tr><tr><td> Question 3:</td>'.
-							 '<td colspan="5"><input type="text" name="Question3" id="question3" size="63">'.
-							 '</td></tr></table><input type="submit" id="addCourse" value="Add course"></form>';
+			$returnString.= '<table id="courseOptionsTable">'.
+							'<thead><tr><th colspan="6" align="center">Selected Course: '.
+							'</td></th></thead></tr>'.
+							'</td><tr><td> Question 1:</td></tr>'.
+							'</td><tr><td> Question 2:</td></tr>'.
+							'</td><tr><td> Question 3:</td></tr>'.
+							'<tr><td>Remove a course: </td>'.
+							'<td><button id="deleteCourse" onclick="deleteItem('."'".'Course'."'".')">'.
+							'Delete Selected Course</button></td></tr>'.
+							'<tr><td>Change Course'."'".'s Instructor to: </td>'.
+							'<td><select id="changeInstructor">'.$instStringBody.'</td><td>'.
+							'<button id="changeCourseIns" onclick="changeCourseIns()">Update Teacher</button>'.
+							'</table><br>'.
+							'<form id="addCourseForm"><table>'.
+							'<thead><tr><th colspan="6" align="center">Add a Course: '.
+							'</td></th></thead></tr><tr><td> Course Code:</td>'.
+							'<td><input type="text" name="courseCode" id="courseCode" size="7"></td>'. 
+							'<td> Title:</td>'.
+							'<td colspan="3"><input type="text" name="courseTitle" id="courseTitle" size="40">'.
+							'</td></tr>'.'<tr><td> Term Offered:</td><td><select id="courseTerm">'.
+							'<option value="W">Winter</option><option value="F">Fall</option>'.
+							'<option value="S">Summer</option></select></td>'.
+							'<td> Instructor:</td><td>'.$instStringHead.'</td><td> Campus:</td><td>'.
+							$Campuses.'</td></tr><tr><td>TA Positions: </td><td>'.$Positions.'</td>'.
+							'<td>Year: </td><td>'.$years.'</td></tr>'.
+							'<tr><td> Question 1:</td>'.
+							'<td colspan="5"><input type="text" name="Question1" id="question1" size="63">'.
+							'</td></tr><tr><td> Question 2:</td>'.
+							'<td colspan="5"><input type="text" name="Question2" id="question2" size="63">'.
+							'</td></tr><tr><td> Question 3:</td>'.
+							'<td colspan="5"><input type="text" name="Question3" id="question3" size="63">'.
+							'</td></tr></table><input type="submit" id="addCourse" value="Add course"></form>';
 		}
 		elseif($_SESSION['role'] == 'APPLICANT'){
 			$returnString.= '<center><button id="apply">Apply For Selected Course</botton></center><br>';
@@ -404,7 +411,7 @@
 		}
 		$returnString .= '<tr></tbody></table></div><br>'.
 						 '<button id="deleteUser" onclick="deleteItem('."'".'User'."'".')">'.
-		                 'Remove Selected User</button><br>'.
+		                 'Remove Selected User</button><br><br>'.
 						 '<form id="addUserForm"><table id="addUserTable">'.
 						 '<thead><tr><th colspan="6" align="center">Add a User:</tr></th></thead>'.
 						 '<td> Utorid:</td>'.
