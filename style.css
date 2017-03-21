@@ -57,6 +57,16 @@ body{
 
 
 /* Users Page */
+
+#removeUserTable{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 10px;
+	padding: 8px;
+	width: 600px;
+	margin: auto;
+}
+
 #addUserTable{
 	background-color: #aeccfc;	/* Light Blue */
 	border:2px solid black;
@@ -85,6 +95,17 @@ body{
 	width: 200px;
 	margin: auto;
 }
+
+#editAppTable{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 10px;
+	border-spacing: 10px;
+	padding: 8px;
+	width: 200px;
+	margin: auto;
+}
+
 
 /* Profile Page */
 

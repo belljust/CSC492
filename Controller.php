@@ -268,9 +268,7 @@
 					$query2 = 'UPDATE COURSE SET POSITIONS_AVAILABLE='. ($row[2]-1).
 							  ' WHERE CID='.$row[0].';';
 					mysqli_query($dbconnect, $query2);
-					
 				}
-
 			}
 			else{
 				$query =  'UPDATE APPLICATIONS SET TAG='.$_POST['TagValue'].' WHERE CID='.
@@ -294,8 +292,6 @@
 					mysqli_query($dbconnect, $query2);
 				}
 			}
-			
-
 		}
 
 		if (isset($_POST['Sort'])){
@@ -347,7 +343,7 @@
 	
 	if(isset($_POST['My_Applications'])) {
 		$returnString = '<table id="myAppTable"><thead><th align="center" colspan="5">'.
-						'My Applications</th><tr><td>Course Code</td><td>Term</td>'.
+						'MY APPLICATIONS</th><tr><td>Course Code</td><td>Term</td>'.
 						'<td>Year</td><td>Instructor</td><td>Campus</td></tr></thead><tbody>';
 
 		$query = 'SELECT CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS '.
@@ -361,7 +357,13 @@
 			}
 			$returnString .= '</tr>';
 		}
-		$returnString.= '</tbody></table><br>';
+		$returnString.= '</tbody></table><br>'.
+						'<table id="editAppTable"><thead><th align="center" colspan="5">'.
+						'Selected Application </th>'. 
+						'<tr><td><center><button id="editApp"onclick="">'.
+						'Edit Application</button></td></tr></center>'.
+						'<tr><td><center><button id="deleteApp"onclick="">'.
+						'<center>Delete Application</button></td></tr></center></table><br></thead>';
 		echo $returnString;
 	}
 
@@ -409,29 +411,30 @@
 			}
 			$returnString .= '</tr>';
 		}
-		$returnString .= '<tr></tbody></table></div><br>'.
-						 '<button id="deleteUser" onclick="deleteItem('."'".'User'."'".')">'.
-		                 'Remove Selected User</button><br><br>'.
-						 '<form id="addUserForm"><table id="addUserTable">'.
-						 '<thead><tr><th colspan="6" align="center">Add a User:</tr></th></thead>'.
-						 '<td> Utorid:</td>'.
-						 '<td><input type="text" name="userUtorid" id="userUtorid" size="10"'.
-						 'maxlength="8"></td><td> Role:</td>'.
-						 '<td><select id="userRole"><option value="APPLICANT"> Applicant</option>'.
-						 '<option value="INSTRUCTOR"> Instructor </option></select></td></tr>'.
-						 '<tr><td> First Name:</td>'.
-						 '<td colspan="3"><input type="text" name="userFname" id="userFname" size="40">'.
-						 '</td>'.'</tr><tr><td> Last Name:</td><td colspan="3">'.
-						 '<input type="text" name="userLname" id="userLname" size="40">'.
-						 '</td></tr>'.'<tr><td> Password:</td><td colspan="3">'.
-						 '<input type="password" name="userPassword" id="userPassword" size="40">'.
-						 '</td></tr>'.'<tr><td> Retype Pswd:</td><td colspan="3">'.
-						 '<input type="password" name="retypePassword" id="retypePassword" size="40">'.
-						 '</td></tr>'.'<tr><td>Email Address:</td>'.
-						 '<td colspan="3"><input type="text" name="email" id="email" size="40"'.
-						 ' placeholder="UTOR Email Preferably"></td></tr>'.
-						 '<tr><th colspan="6" align="center" style="border-bottom: 0;">'.
-						 '<input type="submit" id="addUser" value="Add User"></th></tr></table></form>';
+		$returnString .= '<tr></tbody></table></div><br><table id="removeUserTable">'.
+						'<thead><tr><th colspan="6" align="center">Selected User:</tr></th></thead>'.
+						'<td><center><br><button id="deleteUser" onclick="deleteItem('."'".'User'."'".')">'.
+		                'Remove Selected User</button></center><br></td></table><br><br>'.
+						'<form id="addUserForm"><table id="addUserTable">'.
+						'<thead><tr><th colspan="6" align="center">Add a User:</tr></th></thead>'.
+						'<td> Utorid:</td>'.
+						'<td><input type="text" name="userUtorid" id="userUtorid" size="10"'.
+						'maxlength="8"></td><td> Role:</td>'.
+						'<td><select id="userRole"><option value="APPLICANT"> Applicant</option>'.
+						'<option value="INSTRUCTOR"> Instructor </option></select></td></tr>'.
+						'<tr><td> First Name:</td>'.
+						'<td colspan="3"><input type="text" name="userFname" id="userFname" size="40">'.
+						'</td>'.'</tr><tr><td> Last Name:</td><td colspan="3">'.
+						'<input type="text" name="userLname" id="userLname" size="40">'.
+						'</td></tr>'.'<tr><td> Password:</td><td colspan="3">'.
+						'<input type="password" name="userPassword" id="userPassword" size="40">'.
+						'</td></tr>'.'<tr><td> Retype Pswd:</td><td colspan="3">'.
+						'<input type="password" name="retypePassword" id="retypePassword" size="40">'.
+						'</td></tr>'.'<tr><td>Email Address:</td>'.
+						'<td colspan="3"><input type="text" name="email" id="email" size="40"'.
+						' placeholder="UTOR Email Preferably"></td></tr>'.
+						'<tr><th colspan="6" align="center" style="border-bottom: 0;">'.
+						'<input type="submit" id="addUser" value="Add User"></th></tr></table></form>';
 		echo $returnString;
 		mysqli_free_result($result);
 	}
