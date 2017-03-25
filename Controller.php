@@ -25,7 +25,7 @@
 	/* ==================== Courses Request ======================== */
 
 	/* References users table, loops though and places results into a table on page */
-	if((isset($_POST['Courses'])) && ($_SESSION['loggedIn'] == "true")){
+	if((isset($_POST['Courses'])) && ($_SESSION['loggedIn'] == "true") && (!(isset($_POST['Questions'])))){
 
 		/* Deleting Courses */
 		if(isset($_POST['Delete'])){
@@ -45,7 +45,6 @@
 					$_POST['TaPositions'].'","'.$_POST['TaPositions'].'","'.htmlspecialchars($_POST['Question1']).'"
 					,"'.htmlspecialchars($_POST['Question2']).'","'.htmlspecialchars($_POST['Question3']).'");';
 			mysqli_query($dbconnect, $query);
-			//echo $query;
 		}
 
 		/* Changing Instructor of a course */
@@ -54,26 +53,41 @@
 					'" WHERE CID='.$_POST['RowId'];
 			$result = mysqli_query($dbconnect, $query);
 		}
-		
-		$query = 'SELECT * FROM Course;';
-		/* could add sort feature */
+
+		/* Update questions for given course. */
+		if(isset($_POST['UpdateQuestions'])){
+			$query = 'UPDATE COURSE SET QUESTION_1="'.htmlspecialchars($_POST['Question1']).'", QUESTION_2="'.
+					htmlspecialchars($_POST['Question2']).'", QUESTION_3="'.htmlspecialchars($_POST['Question3']).
+					'" WHERE CID='.$_POST['RowId'].';';
+			$result = mysqli_query($dbconnect, $query);
+		}
+
+
+		$query = 'SELECT * FROM Course ORDER BY CODE;';
 
 		/* Populate the Course table, row by row */
 		$result = mysqli_query($dbconnect, $query);
-		$returnString = '<div id="tableWrap"><table id="courseTable"><thead><tr>'.
-						'<th align="center" colspan="9">OPPORTUNITIES</th></tr><tr>'.
-						'<td>Code</td><td>Title</td><td>Term</td><td>Year</td><td>Instructor</td>'.
-						'<td>Campus</td><td>Num Positions</td><td>Available</td></tr></thead><tbody>';
+		$returnString = '<div id="tableWrap"><table id="courseTable" ><thead><tr>'.
+						'<th align="center" colspan="9">OPPORTUNITIES</th></tr>'.
+						'<td id="cCode">Code</td><td id="cTitle">Title</td><td id="cTerm">Term</td>'.
+						'<td id="cYear">Year</td><td id="cInstructor">Instructor</td>'.
+						'<td id="cCampus">Campus</td><td id="cPos">Num Positions</td><td id="cAvail">Available</td>'.
+						'</td></thead><tbody>';
+
 		while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
-			$returnString .= '<tr>';
+			$returnString .= '<tr id="body">';
 			for($i=0; $i <=8; $i++){
 				if($i==0){
-					$returnString .= '<td style="display: none;">'.$row[$i].'</td>';
+					$returnString .= '<td style="display: none;" id="courseId">'.$row[$i].'</td>';
 				}
 				elseif($i == 2){
 					$returnString .= '<td id="rowTitle">'.$row[$i].'</td>';
-				}else{
-					$returnString .= '<td>'.$row[$i].'</td>';
+				}
+				elseif($i == 7){
+					$returnString .= '<td id="cPos">'.$row[$i].'</td>';
+				}
+				else{
+					$returnString .= '<td id="cOther">'.$row[$i].'</td>';
 				}
 			}
 			$returnString .= '</tr>';
@@ -115,22 +129,25 @@
 				}
 				$years.= '</select>';
 			/* ===================================================================================== */
-	
 
 			/* Creates the html code for the Course Table and the form for adding a course underneath */
-			$returnString.= '<table id="courseOptionsTable">'.
+			$returnString.= '<table><tbody><tr><td><table id="courseOptionsTable">'.
 							'<thead><tr><th colspan="6" align="center">Selected Course: '.
-							'</td></th></thead></tr>'.
-							'</td><tr><td> Question 1:</td></tr>'.
-							'</td><tr><td> Question 2:</td></tr>'.
-							'</td><tr><td> Question 3:</td></tr>'.
-							'<tr><td>Remove a course: </td>'.
+							'</th></tr></thead><tbody>'.
+							'<tr><td colspan="3"> <label>Question 1:</label>'.
+							'<input type="text" id="Q1text"></td></tr>'.
+							'<tr><td colspan="3"> <label>Question 2:</label>'.
+							'<input type="text" id="Q2text"></td></tr>'.
+							'<tr><td colspan="3"> <label>Question 3:</label>'.
+							'<input type="text" id="Q3text"></td></tr>'.
+							'<tr><td colspan="5"><button id="updateQuestions">Update Course Questions'.
+							'</button></td></tr>'.'<tr><td>Remove a course: </td>'.
 							'<td><button id="deleteCourse" onclick="deleteItem('."'".'Course'."'".')">'.
 							'Delete Selected Course</button></td></tr>'.
 							'<tr><td>Change Course'."'".'s Instructor to: </td>'.
 							'<td><select id="changeInstructor">'.$instStringBody.'</td><td>'.
 							'<button id="changeCourseIns" onclick="changeCourseIns()">Update Teacher</button>'.
-							'</table><br>'.
+							'</tr></tbody></table></td><td>'.
 							'<form id="addCourseForm"><table>'.
 							'<thead><tr><th colspan="6" align="center">Add a Course: '.
 							'</td></th></thead></tr><tr><td> Course Code:</td>'.
@@ -149,13 +166,27 @@
 							'<td colspan="5"><input type="text" name="Question2" id="question2" size="63">'.
 							'</td></tr><tr><td> Question 3:</td>'.
 							'<td colspan="5"><input type="text" name="Question3" id="question3" size="63">'.
-							'</td></tr></table><input type="submit" id="addCourse" value="Add course"></form>';
+							'</td></tr></table><input type="submit" id="addCourse" value="Add course"></form></td></tr></table>';
 		}
 		elseif($_SESSION['role'] == 'APPLICANT'){
 			$returnString.= '<center><button id="apply">Apply For Selected Course</botton></center><br>';
 		}
 		echo $returnString;
 		mysqli_free_result($result);
+	}
+
+	/* Retieving just the questions for the given course */
+	if(isset($_POST['Courses']) && (isset($_POST['Questions']))){
+		$returnString = array('test2','','');
+		$query = 'SELECT Question_1,Question_2,Question_3 FROM Course 
+			      WHERE CID='.$_POST['Questions'].';';
+		$result = mysqli_query($dbconnect, $query);
+		while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
+			$returnString[0] = htmlspecialchars_decode($row[0]);
+			$returnString[1] = htmlspecialchars_decode($row[1]);
+			$returnString[2] = htmlspecialchars_decode($row[2]);
+		}
+		echo json_encode($returnString);
 	}
 
 	/* The HTML for the application form to be filled out. */
@@ -166,15 +197,15 @@
 		$returnString = '<center><form id="applyForm"><table id="applyTable"><tr><th align="center" colspan="2">'.
 				'Application for '.trim($_POST["RowCourse"],'"').' ('.trim($_POST["RowTerm"],'"').')'.
 				'</th></tr>';
-				if(!(strlen($row[0])==1)){
+				if(!(strlen($row[0])==1) && !($row[0]=='null')){
 					$returnString .= '<tr><td>'.$row[0].'</td></tr>'.
 					'<tr><td><textarea id="answer1" cols="40" rows="4"></textarea></td></tr>';
 				}
-				if(!(strlen($row[1])==1)){
+				if(!(strlen($row[1])==1) && !($row[1]=='null')){
 					$returnString .= '<tr><td>'.$row[1].'</td></tr>'.
 				'<tr><td><textarea id="answer2" cols="40" rows="4"></textarea></td></tr>';
 				}
-				if(!(strlen($row[2])==1)){
+				if(!(strlen($row[2])==1) && !($row[2]=='null')){
 					$returnString .= '<tr><td>'.$row[2].'</td></tr>'.
 					'<tr><td><textarea id="answer3" cols="40" rows="4"></textarea></td></tr>';
 				}
@@ -220,16 +251,21 @@
 					  htmlspecialchars($Answer2).'",ANSWER_3="'.htmlspecialchars($Answer3).
 					  '",MARK_RECEIVED='.$_POST['Grade'].' WHERE AID='.$row[0].';';
 			mysqli_query($dbconnect, $query2);
-			echo $query2;
-
+			$query3 = 'UPDATE APPLICATIONS SET APP_DATE='.$_POST['AppDate'].' WHERE CID='.$_POST['RowId'].
+					' AND UTORID="'.$_SESSION['user'].'";';
+			mysqli_query($dbconnect, $query3);
+			echo $query3;
 		}else{
 			/* Adding the answers from post into Answers table. */
-			$query = 'INSERT INTO ANSWERS VALUES('.($row[0] + 1).','.$Answer1.','.$Answer2.
-				   	 ','.$Answer3.','.$_POST['Grade'].');';
+			$query = 'INSERT INTO ANSWERS VALUES('.($row[0] + 1).',"'.$Answer1.'","'.$Answer2.
+				   	 '","'.$Answer3.'",'.$_POST['Grade'].');';
 			mysqli_query($dbconnect, $query);
+			
 			/* Adding the Application info into applications table. */
-			$query = 'INSERT INTO APPLICATIONS VALUES ("'.$_SESSION['user'].'",'.$_POST['RowId'].',"'.
-					 $_POST['Late'].'","'.($row[0] + 1).'","Pending");';
+			$query = 'INSERT INTO APPLICATIONS VALUES ("'.$_SESSION['user'].'",'.$_POST['RowId']. ',"'.
+					($row[0] + 1).'","Pending",'.$_POST['AppDate'].');';
+			
+
 			if(!(mysqli_query($dbconnect, $query))){
 				$query = 'DELETE FROM ANSWERS WHERE AID='.($row[0] + 1).';';
 				mysqli_query($dbconnect, $query);
@@ -241,9 +277,11 @@
 	}
 
 	if(isset($_POST['All_Applications'])) {
-		$returnString = 'getTags()<div id="tableWrap"><table id="allAppTable"><thead><th align="center" colspan="7">'.
-						'ALL APPLICATIONS</th><tr><td>UTORID</td><td>Course Code</td><td>Term</td>'.
-						'<td>Year</td><td>Instructor</td><td>Campus</td><td>Status</td></tr></thead><tbody>';	
+		$returnString = 'getTags()<div id="tableWrap"><table id="allAppTable"><thead>'.
+						'<th align="center" colspan="8">'.'ALL APPLICATIONS</th><tr><td id="appUtorid">UTORID</td>'.
+						'<td id="appCode">Course Code</td><td id="appTerm">Term</td>'.
+						'<td id="appYear">Year</td><td id="appInstructor">Instructor</td><td id="appCampus">Campus</td>'.
+						'<td id="appStatus">Status</td><td id="appDate">Date</td></tr></thead><tbody>';	
 	
 		if(isset($_POST['ChangeTag'])){
 			
@@ -295,10 +333,10 @@
 		}
 
 		if (isset($_POST['Sort'])){
-			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS,TAG '.
+			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS,TAG,APP_DATE '.
 				 'FROM (COURSE NATURAL JOIN APPLICATIONS) ORDER BY ' . $_POST['SortValue'] . ';';
 		}else{		
-			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS,TAG '.
+			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS,TAG,APP_DATE '.
 				 'FROM (COURSE NATURAL JOIN APPLICATIONS);';
 		}
 
@@ -311,16 +349,18 @@
 		$result = mysqli_query($dbconnect, $query);
 		while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
 			$returnString .= '<tr>';
-			for($i=0; $i<=6; $i++){
+			for($i=0; $i<=7; $i++){
 				if($i==0){
 					$returnString .= '<td onclick="getProfile('."'".$row[$i]."')".'"'.
 								' id="student">'.
 									 $row[$i].'</td>';
 				}
-				elseif($i<6){
-					$returnString .= '<td>'.$row[$i].'</td>';
-				}else{
+				elseif($i==6){
 					$returnString .= '<td class="selectTd">'.$row[$i].'</td>';
+				}elseif($i==7){
+					$returnString .= '<td>'.substr($row[$i],0,15).'</td>';
+				}else{	
+					$returnString .= '<td>'.$row[$i].'</td>';
 				}
 			}
 			$returnString .= '</tr>';
@@ -342,18 +382,29 @@
 	}
 	
 	if(isset($_POST['My_Applications'])) {
-		$returnString = '<table id="myAppTable"><thead><th align="center" colspan="5">'.
-						'MY APPLICATIONS</th><tr><td>Course Code</td><td>Term</td>'.
-						'<td>Year</td><td>Instructor</td><td>Campus</td></tr></thead><tbody>';
 
-		$query = 'SELECT CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS '.
+		$returnString = '<table id="myAppTable"><thead><th align="center" colspan="6">'.
+						'MY APPLICATIONS</th><tr><td>Course Code</td><td>Term</td>'.
+						'<td>Year</td><td>Instructor</td><td>Campus</td>'.
+						'<td>Date</td></tr></thead><tbody>';
+
+		$query = 'SELECT AID,CID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS,APP_DATE '.
 				 'FROM (COURSE NATURAL JOIN APPLICATIONS) NATURAL JOIN ANSWERS '.
-				 'WHERE UTORID="'.$_SESSION['user'].'";';
+				 'WHERE UTORID="'.$_SESSION['user'].'" ORDER BY CODE;';
 		$result = mysqli_query($dbconnect, $query);
 		while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
 			$returnString .= '<tr>';
-			for($i=0; $i <=4; $i++){
-				$returnString .= '<td>'.$row[$i].'</td>';
+			for($i=0; $i <=7; $i++){
+				if($i == 0){
+					$returnString .= '<td style="display: none" id="aid";>'.$row[$i].'</td>';
+				}elseif($i == 1){
+					$returnString .= '<td style="display: none" id="cid";>'.$row[$i].'</td>';
+				}elseif($i == 7){
+					$returnString .= '<td>'.substr($row[$i],0,15).'</td>';
+				}
+				else{
+					$returnString .= '<td>'.$row[$i].'</td>';
+				}
 			}
 			$returnString .= '</tr>';
 		}
@@ -396,8 +447,9 @@
 		$result = mysqli_query($dbconnect, $query);
 		$returnString = '<div id="tableWrap"><table id="userTable">'.
 						'<thead><th align="center" colspan="5">CURRENT USERS</th>'.
-						'<tr><td>UTORID</td><td>First Name</td><td>Last Name</td><td>Role</td>'.
-						'<td>Email Address</td></thead><tbody>';
+						'<tr><td id="userUtorid">UTORID</td><td id="userOther">First Name</td>'.
+						'<td id="userOther">Last Name</td><td id="userOther">Role</td>'.
+						'<td id="userEmail">Email Address</td></thead><tbody>';
 		while ($row =  mysqli_fetch_array($result, MYSQLI_NUM)){
 			$returnString .= '<tr>';
 			for($i=0; $i <=4; $i++){
@@ -405,20 +457,23 @@
 					$returnString .= '<td onclick="getProfile('."'".$row[$i]."')".'"'.
 									' id="applicant">'.
 									 $row[$i].'</td>';
-				}else{
-					$returnString .= '<td>'.$row[$i].'</td>';
+				}elseif($i==4){
+					$returnString .= '<td id="userEmail">'.$row[$i].'</td>';
+				}
+				else{
+					$returnString .= '<td id="userOther">'.$row[$i].'</td>';
 				}
 			}
 			$returnString .= '</tr>';
 		}
-		$returnString .= '<tr></tbody></table></div><br><table id="removeUserTable">'.
+		$returnString .= '<tr></tbody></table></div><br><table><tr><td><table id="removeUserTable">'.
 						'<thead><tr><th colspan="6" align="center">Selected User:</tr></th></thead>'.
 						'<td><center><br><button id="deleteUser" onclick="deleteItem('."'".'User'."'".')">'.
-		                'Remove Selected User</button></center><br></td></table><br><br>'.
+		                'Remove Selected User</button></center><br></td></table></td><td>'.
 						'<form id="addUserForm"><table id="addUserTable">'.
 						'<thead><tr><th colspan="6" align="center">Add a User:</tr></th></thead>'.
 						'<td> Utorid:</td>'.
-						'<td><input type="text" name="userUtorid" id="userUtorid" size="10"'.
+						'<td><input type="text" name="userUtoridText" id="userUtoridText" size="10"'.
 						'maxlength="8"></td><td> Role:</td>'.
 						'<td><select id="userRole"><option value="APPLICANT"> Applicant</option>'.
 						'<option value="INSTRUCTOR"> Instructor </option></select></td></tr>'.
@@ -434,7 +489,8 @@
 						'<td colspan="3"><input type="text" name="email" id="email" size="40"'.
 						' placeholder="UTOR Email Preferably"></td></tr>'.
 						'<tr><th colspan="6" align="center" style="border-bottom: 0;">'.
-						'<input type="submit" id="addUser" value="Add User"></th></tr></table></form>';
+						'<input type="submit" id="addUser" value="Add User">'.
+						'</th></tr></table></form></td></tr></table';
 		echo $returnString;
 		mysqli_free_result($result);
 	}

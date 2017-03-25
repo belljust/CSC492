@@ -2,7 +2,7 @@ CSC108,Introduction to Computer Programming,S,peterson,UTM,6,2017,How experience
 CSC148,Introduction to Computer Science,S,rosenblo,UTM,5,2017,Would you be good with communicating with first years?,What is 12-6?,
 CSC207,Software Design,S,zingarod,UTM,4,2017,Your experience with Java?,Have you done any projects in Java?,
 CSC209,Software Tools and Systems Programming,S,zhanglar,UTSG,3,2017,How good are you with forks? Pipes?,Any experience with C?,
-CSC209,Software Tools and Systems Programming,S,rosebvlo,UTM,4,2017,How good are you with forks? Pipes?,Any experience with C?,
+CSC290,Software Tools and Systems Programming,S,rosebvlo,UTM,4,2017,How good are you with forks? Pipes?,Any experience with C?,
 CSC236,Introduction to Theory of Computation,S,zingarod,UTM,4,2017,Are you a fan of theory?,Favourite course you've taken so far?,
 CSC258,Computer Organization,S,pererson,UTM,3,2017,Your favourite gate?,What 2 gates is a NAND compsed of?,Do you have Assembly experience?
 CSC263,Data Structures and Analysis,S,zingarod,UTM,4,2017,Your favourite Algorthm?,Why is this your favourite algorithm?,
@@ -11,3 +11,8 @@ CSC301,Introduction to Software Engineering,S,bonneran,UTM,3,2017,Are you famili
 CSC309,Programming on the Web,S,rosenlbo,UTM,3,2017,Any experience with Jquery/ Ajax?,"Favourite website, why?",Do you prefer front end/ back end?
 CSC324,Principles of Programming Languages,S,bonneran,UTM,5,2017,Are you familiar with recursion?,Will you be too busy to mark many assignments?,Did you enjoy working with ML?
 CSC324,Principles of Programming Languages,S,bonneran,UTSG,4,2017,Are you familiar with recursion?,Will you be too busy to mark many assignments?,Did you enjoy working with ML?
+CSC309,Programming on the Web,S,rosenblo,UTM,2,2017,Any HTML experience?,Have you made any websites? ,"If answered yes to above, please provide a link."
+CSC338,Numerical Methods,S,bonneran,UTM,1,2017,What is your favourite function and why?,,
+CSC343,Introduction to Databases,S,zingarod,UTM,2,2017,,,
+CSC347,Introduction to Information Security,S,rosenblo,UTM,2,2017,What are some ways to prevent SQL injection?,Did you enjoy this course?,
+CSC363,Computational Complexity and Computability,S,zhanglar,UTM,2,2017,What was your favourite part about this course?,,

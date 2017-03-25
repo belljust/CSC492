@@ -25,7 +25,7 @@ $(document).on("click",'#pageButtons button',function(e) {
 
 /* When selecting a row from the table of courses */
 selectedRow = null;
-$(document).on("click", "#courseTable tbody tr",function() {
+$(document).on("click", "#courseTable tbody #body",function() {
 	if (selectedRow != null){
 		selectedRow.css("background-color", "#aeccfc");
 		var i=0;
@@ -54,12 +54,23 @@ $(document).on("click", "#courseTable tbody tr",function() {
 	});
 	selectedRow = $(this);
 	$("#changeInstructor").val(rowInstructor);
+	getQuestions(selectedRow.children('#courseId').text());
 });
 
-/* When adding a new course*/
+/* When adding a new course */
 $(document).on("submit", "#addCourseForm",function(page) {
 	page.preventDefault();
 	addItem('Course');
+});
+
+/* When user updates questions to a course */
+$(document).on("click", "#updateQuestions",function(){
+	getCourseRowInfo();
+	var Q1 = $("#Q1text").val();
+	var Q2 = $("#Q2text").val();
+	var Q3 = $("#Q3text").val();
+	displayPageInfo('UpdateQuestions=True&Question1=' + Q1 + '&Question2=' +
+			Q2 + '&Question3=' + Q3 + '&RowId=' + rowId + '&Courses');
 });
 
 /* ====================== Users Page =========================== */
@@ -149,6 +160,38 @@ $(document).on("change", "#myProfileTable select",function() {
 	checkValues(this.id,currentVal,$(this).val());
 });
 
+$(document).on("click", "#myAppTable tbody tr",function(){
+	if (selectedRow != null){
+		selectedRow.css("background-color", "#aeccfc");
+	} 
+	$(this).css("background-color", "#ff8533");
+	selectedRow = $(this);
+});
+
+Aid = '', overwriteCourse='';
+$(document).on("click","#editApp",function(){
+	if(selectedRow == null){
+		$("#errorMessage").text("No application selected");
+	}else{
+		var i = 0;
+		selectedRow.find('td').each(function(){
+			switch(i){
+        	case 0:
+        		Aid = $(this).text(); break;
+			case 1:
+        		overwriteCourse = $(this).text(); break;
+        	case 2:
+        		rowTerm = $(this).text(); break;
+        	case 3:
+        		rowInstructor = $(this).text(); break;
+        	case 4:
+        		rowCampus = $(this).text(); break;
+        	}
+			i++;
+		})
+		courseApply();
+	}
+});
 
 /* ================== Applicant Course Page ==================== */
 
@@ -295,13 +338,15 @@ function displayPageInfo(page){
 				if(confirm("You've already submitted a application for this" +
 					" course, would you like to overwrite?")){
 					submitApplication('overwrite');
-					$('#pageInfo').html('Your Application is updated.');	
+					displayPageInfo("My_Applications");
+					$("#appPage").click();
+					$("#errorMessage").text('Your application has been submitted');	
 				}			
 			}else{
 				$("#pageInfo").html(response);
 			}
 			$("#errorMessage").text("");
-			//console.log(response);
+			console.log(response);
 		},
 		error: function(){
 			$("#pageInfo").html('<p>Error connecting to database</p>');
@@ -372,32 +417,32 @@ function addItem(item){
 			$("#errorMessage").text('Your passwords do not match!');
 			$("#userPassword").css("background-color", "#ff3333");
 			$("#retypePassword").css("background-color", "#ff3333");
-			$("#userUtorid").css("background-color", "#ffffff");
+			$("#userUtoridText").css("background-color", "#ffffff");
 			return;
 
-		}else if($("#userUtorid").val().trim() == ''){
+		}else if($("#userUtoridText").val().trim() == ''){
 			$("#errorMessage").text('Utorid cannot be empty!');
-			$("#userUtorid").css("background-color", "#ff3333");
+			$("#userUtoridText").css("background-color", "#ff3333");
 			$("#userPassword").css("background-color", "#ffffff");
 			$("#retypePassword").css("background-color", "#ffffff");
 			return;
 
 		}else if($("#userFname").val().trim() == ''){
 			$("#errorMessage").text('Your first name cannot be empty!');
-			$("#userUtorid").css("background-color", "#ff3333");
+			$("#userUtoridText").css("background-color", "#ff3333");
 			$("#userPassword").css("background-color", "#ffffff");
 			$("#retypePassword").css("background-color", "#ffffff");
 			return;
 			
 		}else if($("#userLname").val().trim() == ''){
 			$("#errorMessage").text('Your last name cannot be empty!');
-			$("#userUtorid").css("background-color", "#ff3333");
+			$("#userUtoridText").css("background-color", "#ff3333");
 			$("#userPassword").css("background-color", "#ffffff");
 			$("#retypePassword").css("background-color", "#ffffff");
 			return;
 			
 		}else{
-			var addString = 'UserUtorid=' + $('#userUtorid').val()
+			var addString = 'UserUtorid=' + $('#userUtoridText').val()
 						+ '&UserRole=' + $('#userRole').val()
 						+ '&UserFname=' + $('#userFname').val()
 						+ '&UserLname=' + $('#userLname').val()
@@ -430,6 +475,23 @@ function changeCourseIns(){
 	}
 }
 
+/* Simply sends which instructor needs to be updated */
+function getQuestions(course){
+	var questionString = 'Courses=True&Questions=' + course;
+	console.log(questionString);
+	$.ajax({
+		type: "POST",
+		url: "Controller.php",
+		data: questionString,
+		success: function(response){
+			$('#Q1text').val(JSON.parse(response)[0]);
+			$('#Q2text').val(JSON.parse(response)[1]);
+			$('#Q3text').val(JSON.parse(response)[2]);
+		}
+	})
+}
+
+date = '';
 /* Function asks user specific questions to the course, then submits an 
    application to this course. */ 
 function courseApply(){
@@ -437,11 +499,12 @@ function courseApply(){
 		$("errorMessage").text("There's no course selected!");
 	}
 	else{
+		date = new Date();
 		getCourseRowInfo();
 		if(confirm('Are you sure you wish to apply to ' + rowCourse + ' ('
-			+ rowTerm + ') with ' + rowInstructor + '?')){
+			+ rowTerm + ') ?')){
 			applyString = 'RowCourse="'+ rowCourse +'"&RowTerm="' + rowTerm 
-			+ '"&RowInstructor="' + rowInstructor + '"&Late=0&ApplyRequest=';
+			+ '"&RowInstructor="' + rowInstructor +'"&ApplyRequest=';
 			displayPageInfo(applyString);
 		}	
 	} 
@@ -453,10 +516,15 @@ function submitApplication(overwrite){
 		$("#errorMessage").text("Please enter a valid grade (0-100). ");
 		return 0;
 	}else{
-		applyString = 'Grade="' + $("#grade").val() + '"&RowId="' + rowId + 
-		'"&Late=0';
-	}
-	
+		applyString = 'Grade="' + $("#grade").val() + '"&RowId="'; 
+		if(overwriteCourse == ''){
+			applyString += rowId;
+		}else{
+			applyString += overwriteCourse;
+			overwriteCourse = '';
+		}
+		applyString += '"&AppDate="' + date +'"';
+	}	
 	if(!($("#answer1").length == 0)){
 		applyString += '&Answer1='+ $("#answer1").val();
 	}
@@ -471,6 +539,7 @@ function submitApplication(overwrite){
 	}
 	applyString += '&ApplySubmit=';
 	displayPageInfo(applyString);
+	console.log(applyString);
 	
 }
 

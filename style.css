@@ -9,6 +9,7 @@ body{
 
 h1{
 	color: black;
+	margin-left: 150px;
 }
 th{
 	color: black;
@@ -65,6 +66,7 @@ body{
 	padding: 8px;
 	width: 600px;
 	margin: auto;
+	height: 234px;
 }
 
 #addUserTable{
@@ -92,8 +94,10 @@ body{
 	border-radius: 10px;
 	border-spacing: 10px;
 	padding: 8px;
-	width: 200px;
+	width: 550px;
 	margin: auto;
+	text-align: center;
+	border-spacing: 0px;
 }
 
 #editAppTable{
@@ -153,8 +157,9 @@ body{
 	border:2px solid black;
 	border-radius: 10px;
 	padding: 8px;
-	width: 600px;
+	width: 620px;
 	margin: auto;
+	height: 228px;
 }
 
 #addCourseForm{
@@ -169,15 +174,92 @@ body{
 #courseTable, #allAppTable, #userTable{
 	border: 2px solid black;
 	border-radius: 10px;
-	text-align: left;
 	border-spacing: 0px;
 	cell-padding: 20px;
-	overflow: scroll;
 	text-align: center; 
 	width: 100%;
+	box-shadow: 10px 10px 5px #888888;
+}
+#allAppTable tbody{
+	display: block;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	max-height: 400px;
 }
 
-#courseTable tbody tr:hover{
+
+#userTable thead td{
+		display: inline-block;
+}
+
+#userTable tbody{
+	display: block;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	max-height: 300px;
+}
+#userUtorid{
+	margin-left: -30px;
+}
+#userOther,#userUtorid{
+	width: 185px;
+}
+#userEmail{
+	width: 300px;
+}
+#applicant{
+	margin-left: -60px;
+}
+
+#allAppTable thead td{
+	display: inline-block;
+	width: 11.5%;
+	text-align: center;
+}
+#allAppTable tbody td{
+	width: 10%;
+}
+
+#appUtorid, #appStatus{
+	margin-left: -10px;
+}
+#appYear{
+	margin-left: -5px;
+}
+#appCampus{
+	margin-right: 10px;
+}
+
+#courseTable thead td{
+	display: inline-block;
+	
+}
+#courseTable tbody{
+	display: block;
+	overflow-y: scroll;
+	max-height: 300px;
+}
+#cCode{
+	margin-left: -65px;
+}
+#cCode,#cTerm,#cYear,#cInstructor,#cCampus,#cAvail{
+	width: 60px;
+}
+#cTitle{
+	width: 475px;
+}
+
+#rowTitle{
+	width: 475px;
+}
+#cOther{
+	width: 60px;
+}
+#cPos{
+	width: 100px;
+}
+
+#courseTable tbody #body:hover{
 	background-color: #ffff80; /* Hover Yellow */
 }
 #userTable tbody tr:hover{
@@ -186,29 +268,29 @@ body{
 #allAppTable tbody tr:hover{
 	background-color: #ffff80; 
 }
+#myAppTable tbody tr:hover{
+	background-color: #ffff80; 
+}
 
 #courseTable td, #allAppTable td{
 	padding: 5px;
 }
+
 
 #selected{
 	background-color: #ff8533;	/* Selected Orange */
 }
 
 input {
-	outline: 1px solid grey;
-}
-
-#pageInfo{
-    overflow: scroll;
+	outline: 2px solid grey;
 }
 
 #tableWrap{
 	background-color: #aeccfc;	/* Light Blue */
 	position: relative;
+	display: block;
 	max-height: 50%;
 	max-width: 65%;
-	overflow: scroll;
 }
 
 select #green{
@@ -238,6 +320,11 @@ thead{
 	height: 30px;
 	width: 110px;
 	font-size: 100%;
+}
+
+#Q1text,#Q2text,#Q3text{
+	margin-left:  20px;
+	width: 80%;
 }
 
 

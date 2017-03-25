@@ -82,10 +82,10 @@
 			elseif ($_SESSION['role'] == "APPLICANT"){
 				/* HTML for page buttons for applicants. Displayed when $_SESSION['User'] == 'APPLICANT' */
 				$applicantPages = '<center><table id="appButtons"><tr><td><button id="coursePage"'.
-					  'onclick="displayPageInfo(' . "'Courses'" .')">Courses</button>'.
+					  'onclick="displayPageInfo(' . "'Courses'" .');selectedRow=null;">Courses</button>'.
 					  '</td><td><button id="profilePage" onclick="getProfile('."'MyProfile'".')">'.
 					  'My Profile</button></td><td>'.
-					  '<button id="appPage" onclick="displayPageInfo('."'My_Applications'".')">'.
+					  '<button id="appPage" onclick="displayPageInfo('."'My_Applications'".'); selectedRow=null";>'.
 					  'Applications</button></td>'.
 					  '<td><button id="contactPage">Contact</botton></td>'.
 					  '<td id="loggedInUser">Logged in as: '. $_SESSION['user'].'</td></tr></table></center><br>';
