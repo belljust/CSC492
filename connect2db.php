@@ -52,6 +52,14 @@
 				'<tr><td align="right" colspan="2"> <input type="submit" id="login" value="Login">'.
 				'</button></td></tr></table></form>';
 			echo $loginTable;
+			
+			/* HTML for site information Displayed when $_SESSION['loggedIn'] == False */
+			$loginInfo = '<br><table id="loginInfoTable" style="border:2px solid black;">'.
+				'<tr><th align="center" colspan="2">Application Information: </th></tr>'.
+				'<tr><td>This is the UTM TA Application website. </td></tr>'.
+				'<tr><td>Please remember to answers any questions asked while applying for a course and to fill out your profile! </td></tr>'.
+				'<td></td></table>';
+			echo $loginInfo;
 		}else{
 			if ($_SESSION['role'] == "ADMIN"){
 				/* HTML for page buttons for admins. Displayed when $_SESSION['User'] == 'ADMIN' */

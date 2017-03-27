@@ -140,8 +140,8 @@
 							'<input type="text" id="Q2text"></td></tr>'.
 							'<tr><td colspan="3"> <label>Question 3:</label>'.
 							'<input type="text" id="Q3text"></td></tr>'.
-							'<tr><td colspan="5"><button id="updateQuestions">Update Course Questions'.
-							'</button></td></tr>'.'<tr><td>Remove a course: </td>'.
+							'<tr><td colspan="5"><center><button id="updateQuestions">Update Course Questions'.
+							'</button></center></td></tr>'.'<tr><td>Remove a course: </td>'.
 							'<td><button id="deleteCourse" onclick="deleteItem('."'".'Course'."'".')">'.
 							'Delete Selected Course</button></td></tr>'.
 							'<tr><td>Change Course'."'".'s Instructor to: </td>'.
@@ -166,7 +166,7 @@
 							'<td colspan="5"><input type="text" name="Question2" id="question2" size="63">'.
 							'</td></tr><tr><td> Question 3:</td>'.
 							'<td colspan="5"><input type="text" name="Question3" id="question3" size="63">'.
-							'</td></tr></table><input type="submit" id="addCourse" value="Add course"></form></td></tr></table>';
+							'</td></tr></table><center><input type="submit" id="addCourse" value="Add course"></center></form></td></tr></table>';
 		}
 		elseif($_SESSION['role'] == 'APPLICANT'){
 			$returnString.= '<center><button id="apply">Apply For Selected Course</botton></center><br>';
@@ -365,17 +365,26 @@
 			}
 			$returnString .= '</tr>';
 		}
-		$returnString.= '</tbody></table></div><br><table id="viewProfileTable"><tr><td><center>'. 
-						'<button id="viewProfile"onclick="getProfile('."'Instructor')".'">'.
+		$returnString.= '</tbody></table></div><table id="viewProfileTable">'.
+					'<thead><th align="center" colspan="5">'.
+						'Selected Application: </th></thead><br><tr><td><center>'. 
+						'<br><button id="viewProfile"onclick="getProfile('."'Instructor')".'">'.
 						'View Profile</button></center><br></td></tr>';
-		
-		$returnString.= '<tr><td>Sort by: <label for="Sort"></label><select id="appSort">
+
+		$returnString.= '<tr><td colspan="3"> <label>Question 1: </label>'.
+						'</td></tr>'.
+						'<tr><td colspan="3"> <label>Question 2: </label>'.
+						'</td></tr>'.
+						'<tr><td colspan="3"> <label>Question 3: </label>'.
+						'</td></tr>'.
+						'<td><br></td>'.
+						'<tr><td><center>Sort Applications by: <label for="Sort"></label><select id="appSort">
 						<option value="UTORID">	UTORID</option>
 						<option value="Code"> Course Code</option>
 						<option value="Semester"> Term</option>
 						<option value="Year"> Year</option>
 						<option value="Instructor"> Instructor</option>
-						<option value="Tag">Status</option></select></td></tr></table>';
+						<option value="Tag">Status</option></select></center></td></tr></table>';
 		
 		
 		echo $returnString;

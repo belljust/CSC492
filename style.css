@@ -45,6 +45,15 @@ body{
 	margin: auto;
 }
 
+#loginInfoTable{
+	background-color: #aeccfc;	/* Light Blue */
+	border:2px solid black;
+	border-radius: 10px;
+	padding: 8px;
+	width: 400px;
+	margin: auto;
+}
+
 #login{
 	text-align: center; 
 }
@@ -84,7 +93,7 @@ body{
 	border:2px solid black;
 	border-radius: 10px;
 	padding: 8px;
-	width: 200px;
+	width: 600px;
 	margin: auto;
 }
 
@@ -189,7 +198,7 @@ body{
 
 
 #userTable thead td{
-		display: inline-block;
+	display: inline-block;
 }
 
 #userTable tbody{
@@ -198,15 +207,19 @@ body{
 	overflow-x: hidden;
 	max-height: 300px;
 }
+
 #userUtorid{
 	margin-left: -30px;
 }
+
 #userOther,#userUtorid{
 	width: 185px;
 }
+
 #userEmail{
 	width: 300px;
 }
+
 #applicant{
 	margin-left: -60px;
 }
@@ -223,9 +236,11 @@ body{
 #appUtorid, #appStatus{
 	margin-left: -10px;
 }
+
 #appYear{
 	margin-left: -5px;
 }
+
 #appCampus{
 	margin-right: 10px;
 }
@@ -234,17 +249,21 @@ body{
 	display: inline-block;
 	
 }
+
 #courseTable tbody{
 	display: block;
 	overflow-y: scroll;
 	max-height: 300px;
 }
+
 #cCode{
 	margin-left: -65px;
 }
+
 #cCode,#cTerm,#cYear,#cInstructor,#cCampus,#cAvail{
 	width: 60px;
 }
+
 #cTitle{
 	width: 475px;
 }
@@ -252,9 +271,11 @@ body{
 #rowTitle{
 	width: 475px;
 }
+
 #cOther{
 	width: 60px;
 }
+
 #cPos{
 	width: 100px;
 }
@@ -276,7 +297,6 @@ body{
 	padding: 5px;
 }
 
-
 #selected{
 	background-color: #ff8533;	/* Selected Orange */
 }
@@ -296,6 +316,7 @@ input {
 select #green{
 	background-color: green;
 }
+
 #errorMessage{
 	color: red;
 }
@@ -314,6 +335,7 @@ thead{
 	width: 110px;
 	font-size: 100%;
 }
+
 #coursePage{
 	background-color: #153363;
 	color: white;
