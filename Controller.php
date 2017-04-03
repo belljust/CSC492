@@ -177,7 +177,7 @@
 
 	/* Retieving just the questions for the given course */
 	if(isset($_POST['Courses']) && (isset($_POST['Questions']))){
-		$returnString = array('test2','','');
+		$returnString = array('','','');
 		$query = 'SELECT Question_1,Question_2,Question_3 FROM Course 
 			      WHERE CID='.$_POST['Questions'].';';
 		$result = mysqli_query($dbconnect, $query);
@@ -352,8 +352,13 @@
 			for($i=0; $i<=7; $i++){
 				if($i==0){
 					$returnString .= '<td onclick="getProfile('."'".$row[$i]."')".'"'.
-								' id="student">'.
-									 $row[$i].'</td>';
+								' id="student">'.$row[$i].'</td>';
+				}
+				elseif($i==1){
+					$returnString .= '<td id="appCourse">'.$row[$i].'</td>';
+				}
+				elseif($i==5){
+					$returnString .= '<td id="appCampus">'.$row[$i].'</td>';
 				}
 				elseif($i==6){
 					$returnString .= '<td class="selectTd">'.$row[$i].'</td>';
@@ -371,15 +376,15 @@
 						'<br><button id="viewProfile"onclick="getProfile('."'Instructor')".'">'.
 						'View Profile</button></center><br></td></tr>';
 
-		$returnString.= '<tr><td colspan="3"> <label>Question 1: </label>'.
-						'</td></tr>'.
-						'<tr><td colspan="3"> <label>Question 2: </label>'.
-						'</td></tr>'.
-						'<tr><td colspan="3"> <label>Question 3: </label>'.
-						'</td></tr>'.
+		$returnString.= '<tr><td colspan="3"> <label>Question 1: </label></td></tr>'.
+						'<tr><td id="appAnswer1"></td></tr>'.
+						'<tr><td colspan="3"> <label>Question 2: </label></td></tr>'.
+						'<tr><td id="appAnswer2"></td></tr>'.
+						'<tr><td colspan="3"> <label>Question 3: </label></td></tr>'.
+						'<tr><td id="appAnswer3"></td></tr>'.
 						'<td><br></td>'.
-						'<tr><td><center>Sort Applications by: <label for="Sort"></label><select id="appSort">
-						<option value="UTORID">	UTORID</option>
+						'<tr><td><center>Sort Applications by: <label for="Sort"></label>
+						<select id="appSort"><option value="UTORID">	UTORID</option>
 						<option value="Code"> Course Code</option>
 						<option value="Semester"> Term</option>
 						<option value="Year"> Year</option>
@@ -425,6 +430,31 @@
 						'<tr><td><center><button id="deleteApp"onclick="">'.
 						'<center>Delete Application</button></td></tr></center></table><br></thead>';
 		echo $returnString;
+	}
+
+	/* Retieving just the answers for the given application */
+	if(isset($_POST['GetAppAnswers'])){
+		$returnString = array('','','');
+		$query1 = 'SELECT CID FROM COURSE WHERE CODE="'.$_POST['Course'].
+					'" AND CAMPUS="'.$_POST['Campus'].'";';
+		$result1 = mysqli_query($dbconnect, $query1);
+		while ($row1 =  mysqli_fetch_array($result1, MYSQLI_NUM)){
+			$CID = $row1[0];
+		}
+		$query2 = 'SELECT AID FROM APPLICATIONS WHERE CID='.$CID.' AND UTORID="'.
+					$_POST['Student'].'";';
+		$result2 = mysqli_query($dbconnect, $query2);
+		while ($row2 =  mysqli_fetch_array($result2, MYSQLI_NUM)){
+			$AID = $row2[0];
+		}
+		$query3 = 'SELECT Answer_1,Answer_2,Answer_3 FROM ANSWERS WHERE AID='.$AID.';';
+		$result3 = mysqli_query($dbconnect, $query3);
+		while ($row3 =  mysqli_fetch_array($result3, MYSQLI_NUM)){
+			$returnString[0] = htmlspecialchars_decode($row3[0]);
+			$returnString[1] = htmlspecialchars_decode($row3[1]);
+			$returnString[2] = htmlspecialchars_decode($row3[2]);
+		}
+		echo json_encode($returnString);
 	}
 
 

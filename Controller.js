@@ -123,6 +123,9 @@ $(document).on("change", "#appSort", function() {
 /* Extract the information from the row before a tag change */
 $(document).on("mousedown", "#allAppTable tbody tr",function() {
 	selectedRow = $(this);
+	getAppAnswers(selectedRow.children('#student').text(),
+			      selectedRow.children('#appCourse').text(),
+			      selectedRow.children('#appCampus').text())
 });
 
 /* Collect old tag value */
@@ -142,6 +145,9 @@ $(document).on("change", "#allAppTable select", function(e){
 		$(this).val(previousTag);
 	}
 });
+
+/* When an application table row is selected */
+
 /* ================= Student Application Page ================== */
 
 /* When applicant wishes to apply to a course */
@@ -168,28 +174,22 @@ $(document).on("click", "#myAppTable tbody tr",function(){
 	selectedRow = $(this);
 });
 
-Aid = '', overwriteCourse='';
+Aid = '', overwriteCourse='', overwriteTerm='';
 $(document).on("click","#editApp",function(){
 	if(selectedRow == null){
 		$("#errorMessage").text("No application selected");
 	}else{
 		var i = 0;
 		selectedRow.find('td').each(function(){
-			switch(i){
-        	case 0:
-        		Aid = $(this).text(); break;
-			case 1:
+		switch(i){
+			case 2:
         		overwriteCourse = $(this).text(); break;
-        	case 2:
-        		rowTerm = $(this).text(); break;
         	case 3:
-        		rowInstructor = $(this).text(); break;
-        	case 4:
-        		rowCampus = $(this).text(); break;
-        	}
-			i++;
-		})
-		courseApply();
+        		overwriteTerm = $(this).text(); break;
+        }
+		i++;
+	})
+	courseApply();
 	}
 });
 
@@ -368,7 +368,6 @@ function deleteItem(item){
 		selectedRow.find('td').each(function(){
 			if (i==0){
 				deleteString += $(this).text().replace('** ','').replace(' **','');
-				console.log($(this).text().replace('** ','').replace(' **',''));
 				i ++;
 			}
 		});
@@ -500,13 +499,18 @@ function courseApply(){
 	}
 	else{
 		date = new Date();
-		getCourseRowInfo();
-		if(confirm('Are you sure you wish to apply to ' + rowCourse + ' ('
-			+ rowTerm + ') ?')){
+		if(overwriteCourse == ""){
+			getCourseRowInfo();
 			applyString = 'RowCourse="'+ rowCourse +'"&RowTerm="' + rowTerm 
-			+ '"&RowInstructor="' + rowInstructor +'"&ApplyRequest=';
-			displayPageInfo(applyString);
-		}	
+			+'"&ApplyRequest=';
+		}
+		else{
+			applyString = 'RowCourse="'+ overwriteCourse +'"&RowTerm="' + overwriteTerm 
+			+'"&ApplyRequest=';
+		}
+		console.log(overwriteCourse,overwriteCourse);
+		displayPageInfo(applyString);
+		console.log(applyString)
 	} 
 }
 
@@ -776,6 +780,31 @@ function changeTag(newTag, oldTag){
 				'"&ChangeTag';
 	displayPageInfo(changeString);
 }
+
+/* When an admin application table row is selected, display the 
+	corresponding application's answers */
+function getAppAnswers(student,course,campus){
+	var questionString = 'GetAppAnswers=True&Student=' + student +
+					'&Course=' + course + '&Campus=' + campus;
+	console.log(questionString);
+	$.ajax({
+		type: "POST",
+		url: "Controller.php",
+		data: questionString,
+		success: function(response){
+			console.log(response);
+			$('#appAnswer1').text(JSON.parse(response)[0]);
+			$('#appAnswer2').text(JSON.parse(response)[1]);
+			$('#appAnswer3').text(JSON.parse(response)[2]);
+		}
+	})
+}
+
+
+
+
+
+
 
 
 
