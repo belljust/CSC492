@@ -5,19 +5,17 @@ body{
 	height: 100%; 
 	width: 100%;
 	margin: 0;
+	color: #0202DF; /* Body Blue */
 }
 
 h1{
 	color: black;
 	margin-left: 150px;
 }
+
 th{
 	color: black;
 	border-bottom: 2px solid black;
-}
-
-body{
-	color: #0202DF; /* Body Blue */
 }
 
 /* Banner */
@@ -36,6 +34,7 @@ body{
 }
 
 /* Login Page */
+
 #loginTable{
 	background-color: #aeccfc;	/* Light Blue */
 	border:2px solid black;
@@ -43,6 +42,7 @@ body{
 	padding: 8px;
 	width: 200px;
 	margin: auto;
+	box-shadow: 10px 10px 5px #888888;
 }
 
 #loginInfoTable{
@@ -52,6 +52,7 @@ body{
 	padding: 8px;
 	width: 400px;
 	margin: auto;
+	box-shadow: 10px 10px 5px #888888;
 }
 
 #login{
@@ -65,17 +66,16 @@ body{
 	bottom: 10px;
 }
 
-
 /* Users Page */
 
-#removeUserTable{
+#selectedUserTable{
 	background-color: #aeccfc;	/* Light Blue */
 	border:2px solid black;
 	border-radius: 10px;
 	padding: 8px;
-	width: 600px;
+	width: 550px;
 	margin: auto;
-	height: 234px;
+	box-shadow: 10px 10px 5px #888888;
 }
 
 #addUserTable{
@@ -83,11 +83,13 @@ body{
 	border:2px solid black;
 	border-radius: 10px;
 	padding: 8px;
-	width: 600px;
+	width: 550px;
 	margin: auto;
+	box-shadow: 10px 10px 5px #888888;
 }
 
 /* Applications Page */
+
 #viewProfileTable{
 	background-color: #aeccfc;	/* Light Blue */
 	border:2px solid black;
@@ -95,6 +97,7 @@ body{
 	padding: 8px;
 	width: 600px;
 	margin: auto;
+	box-shadow: 10px 10px 5px #888888;
 }
 
 #myAppTable{
@@ -103,22 +106,24 @@ body{
 	border-radius: 10px;
 	border-spacing: 10px;
 	padding: 8px;
-	width: 550px;
+	width: 600px;
 	margin: auto;
 	text-align: center;
 	border-spacing: 0px;
+	box-shadow: 10px 10px 5px #888888;
 }
 
-#editAppTable{
+#selectedAppTable{
 	background-color: #aeccfc;	/* Light Blue */
 	border:2px solid black;
 	border-radius: 10px;
 	border-spacing: 10px;
 	padding: 8px;
-	width: 200px;
+	width: 600px;
 	margin: auto;
+	height: 228px;
+	box-shadow: 10px 10px 5px #888888;
 }
-
 
 /* Profile Page */
 
@@ -127,13 +132,14 @@ body{
 	border:2px solid black;
 	border-radius: 10px;
 	padding: 8px;
-	width: 1000px;
+	width: 900px;
 	margin: auto;
+	box-shadow: 10px 10px 5px #888888;
 }
 
 #myProfileTable p{
 	text-indent: 20pt;
-    display: block;
+	/*display: block;*/
 }
 
 #pWhy, #pTAVol, #pTAExp{
@@ -143,6 +149,7 @@ body{
 }
 
 /* Other Page */
+
 #csvTable{
 	background-color: #aeccfc;	/* Light Blue */
 	border:2px solid black;
@@ -150,6 +157,7 @@ body{
 	padding: 8px;
 	width: 200px;
 	margin: auto;
+	box-shadow: 10px 10px 5px #888888;
 }
 
 #clearSemTable{
@@ -159,6 +167,7 @@ body{
 	padding: 8px;
 	width: 200px;
 	margin: auto;
+	box-shadow: 10px 10px 5px #888888;
 }
 
 #courseOptionsTable{
@@ -169,6 +178,7 @@ body{
 	width: 620px;
 	margin: auto;
 	height: 228px;
+	box-shadow: 10px 10px 5px #888888;
 }
 
 #addCourseForm{
@@ -178,17 +188,22 @@ body{
 	padding: 8px;
 	width: 600px;
 	margin: auto;
+	box-shadow: 10px 10px 5px #888888;
 }
 
 #courseTable, #allAppTable, #userTable{
 	border: 2px solid black;
 	border-radius: 10px;
+	text-align: left;
 	border-spacing: 0px;
 	cell-padding: 20px;
+	overflow: scroll;
 	text-align: center; 
 	width: 100%;
 	box-shadow: 10px 10px 5px #888888;
+	background-color: #aeccfc;	/* Light Blue */
 }
+
 #allAppTable tbody{
 	display: block;
 	overflow-y: scroll;
@@ -196,13 +211,12 @@ body{
 	max-height: 400px;
 }
 
-
 #userTable thead td{
-	display: inline-block;
+	/*display: inline-block;*/
 }
 
 #userTable tbody{
-	display: block;
+	/*display: block;*/
 	overflow-y: scroll;
 	overflow-x: hidden;
 	max-height: 300px;
@@ -225,10 +239,11 @@ body{
 }
 
 #allAppTable thead td{
-	display: inline-block;
+	/*display: inline-block;*/
 	width: 11.5%;
 	text-align: center;
 }
+
 #allAppTable tbody td{
 	width: 10%;
 }
@@ -246,12 +261,11 @@ body{
 }
 
 #courseTable thead td{
-	display: inline-block;
-	
+	/*display: inline-block;*/	
 }
 
 #courseTable tbody{
-	display: block;
+	/*display: block;*/
 	overflow-y: scroll;
 	max-height: 300px;
 }
@@ -271,11 +285,9 @@ body{
 #rowTitle{
 	width: 475px;
 }
-
 #cOther{
 	width: 60px;
 }
-
 #cPos{
 	width: 100px;
 }
@@ -289,6 +301,7 @@ body{
 #allAppTable tbody tr:hover{
 	background-color: #ffff80; 
 }
+
 #myAppTable tbody tr:hover{
 	background-color: #ffff80; 
 }
@@ -302,19 +315,23 @@ body{
 }
 
 input {
-	outline: 2px solid grey;
+    outline: 2px solid grey;
 }
 
 #tableWrap{
-	background-color: #aeccfc;	/* Light Blue */
 	position: relative;
-	display: block;
 	max-height: 50%;
 	max-width: 65%;
+	/*display: block;*/
 }
 
 select #green{
 	background-color: green;
+}
+
+#Q1text,#Q2text,#Q3text{
+	margin-left: 20px;
+	width: 80%;
 }
 
 #errorMessage{
@@ -335,7 +352,6 @@ thead{
 	width: 110px;
 	font-size: 100%;
 }
-
 #coursePage{
 	background-color: #153363;
 	color: white;
@@ -343,10 +359,4 @@ thead{
 	width: 110px;
 	font-size: 100%;
 }
-
-#Q1text,#Q2text,#Q3text{
-	margin-left:  20px;
-	width: 80%;
-}
-
 

@@ -147,7 +147,7 @@
 							'<tr><td>Change Course'."'".'s Instructor to: </td>'.
 							'<td><select id="changeInstructor">'.$instStringBody.'</td><td>'.
 							'<button id="changeCourseIns" onclick="changeCourseIns()">Update Teacher</button>'.
-							'</tr></tbody></table></td><td>'.
+							'</tr></tbody></table></td></tr><td><br></td><tr><td>'.
 							'<form id="addCourseForm"><table>'.
 							'<thead><tr><th colspan="6" align="center">Add a Course: '.
 							'</td></th></thead></tr><tr><td> Course Code:</td>'.
@@ -423,7 +423,7 @@
 			$returnString .= '</tr>';
 		}
 		$returnString.= '</tbody></table><br>'.
-						'<table id="editAppTable"><thead><th align="center" colspan="5">'.
+						'<table id="selectedAppTable"><thead><th align="center" colspan="5">'.
 						'Selected Application </th>'. 
 						'<tr><td><center><button id="editApp"onclick="">'.
 						'Edit Application</button></td></tr></center>'.
@@ -432,7 +432,7 @@
 		echo $returnString;
 	}
 
-	/* Retieving just the answers for the given application */
+	/* Retrieving just the answers for the given application */
 	if(isset($_POST['GetAppAnswers'])){
 		$returnString = array('','','');
 		$query1 = 'SELECT CID FROM COURSE WHERE CODE="'.$_POST['Course'].
@@ -505,11 +505,12 @@
 			}
 			$returnString .= '</tr>';
 		}
-		$returnString .= '<tr></tbody></table></div><br><table><tr><td><table id="removeUserTable">'.
+		$returnString.= '<tr></tbody></table></div><br><table><tr><td><table id="selectedUserTable">'.
 						'<thead><tr><th colspan="6" align="center">Selected User:</tr></th></thead>'.
 						'<td><center><br><button id="deleteUser" onclick="deleteItem('."'".'User'."'".')">'.
-		                'Remove Selected User</button></center><br></td></table></td><td>'.
-						'<form id="addUserForm"><table id="addUserTable">'.
+		                'Remove Selected User</button></center><br></td></table></td></tr>'.
+						'<tr><td><br></td></tr>'.
+						'<tr><td><form id="addUserForm"><table id="addUserTable">'.
 						'<thead><tr><th colspan="6" align="center">Add a User:</tr></th></thead>'.
 						'<td> Utorid:</td>'.
 						'<td><input type="text" name="userUtoridText" id="userUtoridText" size="10"'.
