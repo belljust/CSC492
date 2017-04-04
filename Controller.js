@@ -104,6 +104,15 @@ $(document).on("click", "#userTable tbody tr",function() {
 	});
 });
 
+/* When an ADMIN's user sort value is selected */
+$(document).on("change", "#userSort", function() {
+	console.log("WE REACHED HERE");
+	prevUserSort = $(this).val();
+	sortString = 'Sort=True&SortValue=' + $(this).val() + 
+				'&Users';
+	displayPageInfo(sortString);
+});
+
 /* When adding a new User */
 $(document).on("submit", "#addUserForm",function(page) {
 	page.preventDefault();
@@ -318,7 +327,7 @@ function getPages(){
 
 /* The function that actually does the sending of the variables through 
 	an Ajax call to Controller.php based on collected information stored
-	in the 'page' paramter sent from other functions in Controller.js. */
+	in the 'page' parameter sent from other functions in Controller.js. */
 function displayPageInfo(page){
 	var postString = page+"=True";
 	$.ajax({
@@ -334,6 +343,9 @@ function displayPageInfo(page){
 				$("#pageInfo").html(response.replace('getTags()',''));
 				$("#appSort").val(prevSort);
 				updateTags();
+			}else if(response.includes(("updateVal()"))){
+				$("#pageInfo").html(response.replace('updateVal()',''));
+				$("#userSort").val(prevUserSort);
 			}else if(response.includes(("alreadySubmitted()"))){
 				if(confirm("You've already submitted a application for this" +
 					" course, would you like to overwrite?")){

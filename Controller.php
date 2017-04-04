@@ -94,7 +94,7 @@
 		}
 		$returnString.= '</tbody></table></div><br>';
 
-		/* Only contstruct/ send forms at bottom of table if role is an ADMIN or INSTRUCTOR */
+		/* Only construct/ send forms at bottom of table if role is an ADMIN or INSTRUCTOR */
 		if ($_SESSION['role'] == 'ADMIN' or $_SESSION['role'] == 'INSTRUCTOR'){
 
 			/* ========= Constructing selection options for available teachers and campuses ============ */
@@ -332,6 +332,7 @@
 			}
 		}
 
+		/* Sort for Applications */
 		if (isset($_POST['Sort'])){
 			$query = 'SELECT UTORID,CODE,SEMESTER,YEAR,INSTRUCTOR,CAMPUS,TAG,APP_DATE '.
 				 'FROM (COURSE NATURAL JOIN APPLICATIONS) ORDER BY ' . $_POST['SortValue'] . ';';
@@ -384,14 +385,13 @@
 						'<tr><td id="appAnswer3"></td></tr>'.
 						'<td><br></td>'.
 						'<tr><td><center>Sort Applications by: <label for="Sort"></label>
-						<select id="appSort"><option value="UTORID">	UTORID</option>
+						<select id="appSort"><option value="UTORID"> UTORID</option>
 						<option value="Code"> Course Code</option>
 						<option value="Semester"> Term</option>
 						<option value="Year"> Year</option>
 						<option value="Instructor"> Instructor</option>
 						<option value="Tag">Status</option></select></center></td></tr></table>';
-		
-		
+						
 		echo $returnString;
 	}
 	
@@ -423,7 +423,7 @@
 			$returnString .= '</tr>';
 		}
 		$returnString.= '</tbody></table><br>'.
-						'<table id="selectedAppTable"><thead><th align="center" colspan="5">'.
+						'<table id="AppTable"><thead><th align="center" colspan="5">'.
 						'Selected Application </th>'. 
 						'<tr><td><center><button id="editApp"onclick="">'.
 						'Edit Application</button></td></tr></center>'.
@@ -479,12 +479,18 @@
 					md5($_POST["UserPassword"]).'");';
 			mysqli_query($dbconnect, $query);
 		}
-
-		$query = 'SELECT * FROM Users;';
-		/* could add sort feature */
-
+		
+		/* Sort for users */
+		$returnString = '';
+		if (isset($_POST['Sort'])){
+			$returnString .= 'updateVal()';
+			$query = 'SELECT UTORID,FNAME,LNAME,ROLE,EMAIL '.
+				 'FROM Users ORDER BY ' . $_POST['SortValue'] . ';';
+		}else{		
+			$query = 'SELECT * FROM Users;';
+		}
 		$result = mysqli_query($dbconnect, $query);
-		$returnString = '<div id="tableWrap"><table id="userTable">'.
+		$returnString .= '<div id="tableWrap"><table id="userTable">'.
 						'<thead><th align="center" colspan="5">CURRENT USERS</th>'.
 						'<tr><td id="userUtorid">UTORID</td><td id="userOther">First Name</td>'.
 						'<td id="userOther">Last Name</td><td id="userOther">Role</td>'.
@@ -508,8 +514,19 @@
 		$returnString.= '<tr></tbody></table></div><br><table><tr><td><table id="selectedUserTable">'.
 						'<thead><tr><th colspan="6" align="center">Selected User:</tr></th></thead>'.
 						'<td><center><br><button id="deleteUser" onclick="deleteItem('."'".'User'."'".')">'.
-		                'Remove Selected User</button></center><br></td></table></td></tr>'.
+		                'Remove Selected User</button><br></center></td>'.
 						'<tr><td><br></td></tr>'.
+						
+						'<tr><td><center>Sort Users by: <label for="Sort"></label>'.
+						'<select id="userSort"><option value="UTORID"> UTORID</option>'.
+						'<option value="FName"> First Name</option>'.
+						'<option value="LName"> Last Name</option>'.
+						'<option value="Role"> Role</option>'.
+						'<option value="Email"> Email Address</option>'.
+						'</select></center></td></tr>'.
+						'</table></td></tr>'.
+						'<tr><td><br></td></tr>'.
+						
 						'<tr><td><form id="addUserForm"><table id="addUserTable">'.
 						'<thead><tr><th colspan="6" align="center">Add a User:</tr></th></thead>'.
 						'<td> Utorid:</td>'.
